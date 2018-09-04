@@ -1,0 +1,20 @@
+<h1>Hello folks, this is Yammer Rank!</h1>
+<p>Choose group name, end, start date and click submit button to see who commmented and posted most.</p>
+
+<p>A value from a list: {{ mylist }}</p>
+
+<p>
+    {% for item in mylist %}
+        <li>{{ item }}</li>
+    {% endfor %}
+</p>
+
+{% macro render_item(item) %}
+    <li>{{ item }}</li>
+{% endmacro %}
+
+<ul>
+    {{ render_item(mylist[0]) }}
+</ul>
+
+

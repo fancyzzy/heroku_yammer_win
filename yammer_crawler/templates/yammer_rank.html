@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comments and Posts Rank</title>
+</head>
+<body>
+<input type="button" name="Submit" value="Back" onclick="javascript:window.history.back();"/>
+<br>
+<br>
+<img src="data:image/png;base64,{{ my_data }}">
+<h2>The {{ rank_category }} Rank List: </h2>
+No.  &nbsp&nbsp Name   &nbsp&nbsp Comment Number &nbsp&nbsp Post Number
+<ol>
+    {% for item in mylist %}
+    <li>
+        <img src = {{ item[4] }} />&nbsp&nbsp {{ item[1] }} &nbsp&nbsp {{ item[2] }}  &nbsp&nbsp {{ item[3] }}
+    </li>
+    {% endfor %}
+</ol>
+
+</body>
+</html>
