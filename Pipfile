@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 openpyxl = "*"
 flask = "*"
-"yampy3" = "==1.0"
+"yampy3" = "*"
 
 [dev-packages]
 
