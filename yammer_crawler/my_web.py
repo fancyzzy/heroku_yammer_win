@@ -18,6 +18,7 @@ from datetime import datetime
 import time
 import my_plot
 import os
+from constants import ACCESS_TOKEN
 
 app = Flask(__name__)
 
@@ -25,18 +26,22 @@ app = Flask(__name__)
 def index():
 
     '''
-
     how to add token to a session?
-
     '''
-    access_token = ''
-    ya = my_yammer.My_Yammer(access_token)
+    if ACCESS_TOKEN == None:
+        #need to login via oauth
+        pass
+    else:
+        #Add token into the session
+        pass
+
+    ya = my_yammer.My_Yammer(ACCESS_TOKEN)
     groups = ya.get_groups()
     print("DEBUG groups: {}".format(groups))
     auth_url = \
         'https://www.yammer.com/dialog/oauth?client_id=2fxbPxiDYwtM40yN3m0fQ&redirect_uri=https%3A%2F%2Fyammerstate.herokuapp.com'
-    return auth_url
-    #return render_template('login.html', groups=groups)
+    #return auth_url
+    return render_template('login.html', groups=groups)
 
 @app.route('/login', methods=['POST'])
 def login2():
@@ -117,9 +122,10 @@ def get_rank():
         final_comment_num = 50
         show_top = 10
 
-    # group_id = '15273590'
-    # group_id = '12562314'
+    # group_id = 15273590
+    # group_id = 12562314
     ya = my_yammer.My_Yammer()
+    my_yammer.pull_newer_messages(group_id, 0)
     group_name = ya.get_group_name(group_id)
     yammer_result = ya.get_group_rank(group_id, letter_num, least_comment_num,\
                                       end_date, start_date, rank_for_post)

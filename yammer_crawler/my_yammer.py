@@ -358,11 +358,12 @@ if __name__ == '__main__':
     email_add = ''
     csl = ''
     pwd = ''
-    group_id = 15273590
-    #group_id = '12562314' #Qingdao
+    #group_id = 15273590 #English
+    group_id = 12562314 #Qingdao
 
-    access_token = '592-FnmLDb1cF0zMgyj32jnz0w'
-    my_yammer = My_Yammer(access_token)
+    from constants import ACCESS_TOKEIN
+    #access_token = '592-FnmLDb1cF0zMgyj32jnz0w'
+    my_yammer = My_Yammer(ACCESS_TOKEN)
 
     my_yammer.pull_newer_messages(group_id, interval=1)
     my_yammer.pull_all_users(group_id, interval=1)

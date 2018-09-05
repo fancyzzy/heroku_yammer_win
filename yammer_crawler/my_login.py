@@ -17,6 +17,8 @@ app.secret_key = 'development'
 app.config['DEBUG'] = True
 oauth = OAuth(app)
 
+from constants import ACCESS_TOKEN
+
 github = oauth.remote_app(
     'github',
     consumer_key='2fxbPxiDYwtM40yN3m0fQ',

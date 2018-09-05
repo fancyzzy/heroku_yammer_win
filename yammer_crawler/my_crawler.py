@@ -39,9 +39,13 @@ from types import  MethodType
 def from_group(self, group_id, older_than=None, newer_than=None,
                limit=None, threaded=None):
     """
+
     Returns messages that were posted in the group identified by group_id.
 
     See the :meth:`all` method for a description of the keyword arguments.
+
+    param group_id is int !
+
     """
     path = "/messages/in_group/%d" % (group_id)
     return self._client.get(path, **self._argument_converter(
@@ -96,7 +100,7 @@ class My_Crawler():
         print("Check group name in 'meta','feed_name' of {}".format(group_messages_url))
 
         # Call yampy API
-        json_dict = self.yampy.messages.from_group(group_id)
+        json_dict = self.yampy.messages.from_group(int(group_id))
 
         if json_dict != None:
             group_name = json_dict["meta"]["feed_name"]
@@ -106,7 +110,7 @@ class My_Crawler():
     ##########get_group_name()#####################
 
 
-    def download_all_messages(self, group_id, interval=5, older_than_message_id=None, n=None):
+    def download_all_messages(self, group_id, interval=1, older_than_message_id=None, n=None):
         '''
 
         download all the messages in the group
@@ -134,7 +138,7 @@ class My_Crawler():
             print("url: {}".format(group_messages_url))
 
             #Call yampy API
-            json_dict = self.yampy.messages.from_group(group_id, older_than_message_id)
+            json_dict = self.yampy.messages.from_group(int(group_id), older_than_message_id)
 
             #concatenate json_str to json_result
             if json_result == None:
@@ -198,9 +202,9 @@ class My_Crawler():
 
             #Call yampy API
             if not older_than_message_id:
-                json_dict = self.yampy.messages.from_group(group_id, None, newer_than_message_id)
+                json_dict = self.yampy.messages.from_group(int(group_id), None, newer_than_message_id)
             else:
-                json_dict = self.yampy.messages.from_group(group_id, older_than_message_id)
+                json_dict = self.yampy.messages.from_group(int(group_id), older_than_message_id)
 
             #print("DEBUG json_dict: {}".format(json_dict))
             if len(json_dict["messages"]) == 0:
@@ -349,9 +353,12 @@ class My_Crawler():
 
 if __name__ == '__main__':
 
-    group_id = 15273590
-    access_token = '592-FnmLDb1cF0zMgyj32jnz0w'
-    my_crawler = My_Crawler(access_token)
+    group_id = 15273590 #English group
+    group_id = 12562314 #Qingdao
+    #access_token = '592-FnmLDb1cF0zMgyj32jnz0w'
+
+    from constants import ACCESS_TOKEN
+    my_crawler = My_Crawler(ACCESS_TOKEN)
 
     '''
     #test download and save all messages in the group
@@ -364,19 +371,12 @@ if __name__ == '__main__':
     '''
 
 
-    '''
     #test download and save all users in the group
     
-    #group_id = 12562314 #QD Center
-    group_id = 15273590 #GSM English Group
-    result_json = my_crawler.download_all_users(group_id, interval=1)
+    result_json = my_crawler.download_all_users(int(group_id), interval=1)
     print("Debug users number: {}, result_json: {}".format(len(result_json["users"]), result_json))
-    file_name = 'group_%s_users.json'%(group_id)
-    with open(file_name, 'w') as fb:
-        fb.write(json.dumps(result_json))
+
     '''
-
-
     #Test to download newer messages
     newer_than_message_id = '1147793449'
     newer_result_json = my_crawler.download_newer_messages(group_id, newer_than_message_id, interval=1)
@@ -386,6 +386,7 @@ if __name__ == '__main__':
     else:
         print("None newer messages")
 
+    '''
     print("done")
 
 
