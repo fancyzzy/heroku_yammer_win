@@ -1,20 +1,19 @@
-<h1>Hello folks, this is Yammer Rank!</h1>
-<p>Choose group name, end, start date and click submit button to see who commmented and posted most.</p>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title> Yammer Rank Home Page</title>
+        <script type="text/javascript"></script>
+        <link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
+    </head>
 
-<p>A value from a list: {{ mylist }}</p>
-
-<p>
-    {% for item in mylist %}
-        <li>{{ item }}</li>
-    {% endfor %}
-</p>
-
-{% macro render_item(item) %}
-    <li>{{ item }}</li>
-{% endmacro %}
-
-<ul>
-    {{ render_item(mylist[0]) }}
-</ul>
-
-
+    <body>
+        <h1>Hello folks, this is Yammer Rank!</h1>
+        <h4>This webpage can allow you to check the yammer post state and get the rank list figure.</h4>
+        <br><br>
+        <form method="POST" action="/yammer_rank">
+        <input type="submit" value="Start" name="login_button"/>
+        </form>
+        <br><br>
+    </body>
+</html>

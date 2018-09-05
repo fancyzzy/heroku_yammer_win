@@ -1,2 +1,5 @@
 /.idea
-/yammer_crawler/__pycache__
+/yammer_crawler/__pycache__/*.pyc
+*.pyc
+yammer_crawler/__pycache__/my_crawler.cpython-36.pyc
+yammer_crawler/__pycache__/my_plot.cpython-36.pyc

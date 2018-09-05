@@ -2,22 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Comments and Posts Rank</title>
+    <title> Yammer Rank Home Page</title>
+    <script type="text/javascript"></script>
+    <link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
 </head>
+
 <body>
-<input type="button" name="Submit" value="Back" onclick="javascript:window.history.back();"/>
-<br>
-<br>
-<img src="data:image/png;base64,{{ my_data }}">
-<h2>The {{ rank_category }} Rank List: </h2>
-No.  &nbsp&nbsp Name   &nbsp&nbsp Comment Number &nbsp&nbsp Post Number
-<ol>
-    {% for item in mylist %}
-    <li>
-        <img src = {{ item[4] }} />&nbsp&nbsp {{ item[1] }} &nbsp&nbsp {{ item[2] }}  &nbsp&nbsp {{ item[3] }}
-    </li>
-    {% endfor %}
-</ol>
+<h1> Welcome to Yammer Rank</h1>
+<h4>Select group, end date and start date to get the rank result</h4>
+<form method="post" action="/rank_result">
+    <br>
+    group name
+    <select name="sel_group" id="id_sel_group">
+        {% for  group in groups %}
+            <option value = {{ group[1] }}> {{ group[0] }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    from date
+    <input type="date" id="id_end_date" name="end_date" placeholder="Enter end date"/>
+    to
+    <input type="date" name="start_date" placeholder="Beginning"/>
+    <br>
+    Comment character number >=
+    <input type="text" id="id_letter_num" name="letter_num" oninput="value=value.replace(/[^\d]/g,'')"/>
+    <br>
+    Comment number >=
+    <input type="text" id="id_comment_num" name="least_comment_num" oninput="value=value.replace(/[^\d]/g,'')"/>
+    <br>
+    final comment number =
+    <input type="text" id="id_final_comment_num" name="final_comment_num" oninput="value=value.replace(/[^\d]/g,'')"/>
+    <br>
+    display top x labels=
+    <input type="text" id="id_show_top" name="show_top" oninput="value=value.replace(/[^-,\d]/g,'')"/>
+    <br>
+    Rank based on post number=
+    <select id="id_rank_for_post" name="rank_for_post">
+        <option value = 0> False</option>
+        <option value = 1> True</option>
+    </select>
+    <br><br>
+    <input type="submit" value="Get Yammer Rank" name="get_rank"/>
+</form>
+<br><br>
+<!--
+<form method="post" action="/login">
+    <input type="submit" value="Download newer message" name="start_download"/>
+</form>
+-->
+
+<script>
+    window.onload = function(){
+        var t= new Date();
+        var year = t.getFullYear();
+        var month = t.getMonth() + 1;
+        var day = t.getDate();
+        var p_end_date = document.getElementById("id_end_date");
+        p_end_date.value=year+"/"+month+"/"+day;
+        document.getElementById("id_letter_num").value=1
+        document.getElementById("id_comment_num").value=1
+        document.getElementById("id_final_comment_num").value=100
+        document.getElementById("id_show_top").value=10
+    };
+</script>
 
 </body>
 </html>

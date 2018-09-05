@@ -22,17 +22,17 @@ from my_constants import ACCESS_TOKEN
 
 app = Flask(__name__)
 
+'''
 @app.route('/')
 def index():
 
-    '''
-    how to add token to a session?
-    '''
     if ACCESS_TOKEN == None:
         #need to login via oauth
+        print("DEBUG ACCESS_TOKEN == NONE, need to login.")
         pass
     else:
         #Add token into the session
+        print("ACCESS_TOKEN is existed.")
         pass
 
     ya = my_yammer.My_Yammer(ACCESS_TOKEN)
@@ -42,25 +42,58 @@ def index():
         'https://www.yammer.com/dialog/oauth?client_id=2fxbPxiDYwtM40yN3m0fQ&redirect_uri=https%3A%2F%2Fyammerstate.herokuapp.com'
     #return auth_url
     return render_template('login.html', groups=groups)
+'''
 
-@app.route('/login', methods=['POST'])
-def login2():
-    print("this is get yammmer newer function")
-    if request.method == 'GET':
-        print("download")
+@app.route('/')
+def index():
+
+    '''
+    how to add token to a session?
+    index -> (login) -> yammer_rank -> rank_result
+    '''
+    return render_template('index.html')
+
+
+@app.route('/yammer_rank', methods=["POST"])
+def yammer_rank():
+    '''
+    login via oauth
+    '''
+    ya = my_yammer.My_Yammer(ACCESS_TOKEN)
+    groups = ya.get_groups()
+    print("DEBUG groups: {}".format(groups))
+    #return auth_url
+
+    print("DEBUG you click the login button")
+
+    return render_template("yammer_rank.html", groups=groups)
+
+
+def oauth_login():
+    access_token = None
+    auth_url = \
+        'https://www.yammer.com/dialog/oauth?client_id=2fxbPxiDYwtM40yN3m0fQ&redirect_uri=https%3A%2F%2Fyammerstate.herokuapp.com'
+
+    if ACCESS_TOKEN == None:
+        #need to login via oauth
+        print("DEBUG ACCESS_TOKEN == NONE, need to login.")
+        pass
     else:
-        print("haha, request.method: {}".format(request.method))
-        print("sleep 3 seconds")
-        #time.sleep(3)
-        group_id = '15273590'
-        ya = my_yammer.My_Yammer()
-        ya.pull_newer_messages(group_id, interval=5)
-        print("done")
-    return render_template('login.html')
+        #Add token into the session
+        print("ACCESS_TOKEN is existed.")
+        pass
+
+    ya = my_yammer.My_Yammer(ACCESS_TOKEN)
+    groups = ya.get_groups()
+    print("DEBUG groups: {}".format(groups))
+    #return auth_url
+
+    return access_token
+
 
 #return the rank page!
-@app.route('/yammer_rank', methods=['POST', 'GET'])
-def get_rank():
+@app.route('/rank_result', methods=['POST', 'GET'])
+def get_rank_result():
 
     end_date = None
     start_date = None
@@ -114,7 +147,7 @@ def get_rank():
             end_date = end_date.replace('-','/')
 
     if request.method == 'GET':
-        print("GET yammer_rank")
+        print("GET rank_result")
         end_date = None
         start_date = None
         letter_num  = 1
@@ -124,8 +157,7 @@ def get_rank():
 
     # group_id = 15273590
     # group_id = 12562314
-    ya = my_yammer.My_Yammer()
-    my_yammer.pull_newer_messages(group_id, 0)
+    ya = my_yammer.My_Yammer(ACCESS_TOKEN)
     group_name = ya.get_group_name(group_id)
     yammer_result = ya.get_group_rank(group_id, letter_num, least_comment_num,\
                                       end_date, start_date, rank_for_post)
@@ -151,7 +183,7 @@ def get_rank():
     if rank_for_post:
         rank_category = "Post"
 
-    return render_template('yammer_rank.html', mylist=yammer_result, my_data=data, rank_category=rank_category)
+    return render_template('rank_result.html', mylist=yammer_result, my_data=data, rank_category=rank_category)
 
 
 if __name__ == '__main__':

@@ -96,7 +96,14 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
     name_list = [x[1] for x in data_list if x[2]>threshold or x[3]>threshold]
     photo_list= [x[-1] for x in data_list if x[2]>threshold or x[3]>threshold]
 
-    max_x_value = max(comment_list)
+    print("DEBUG comment_list: {}".format(comment_list))
+    max_x_value = 100
+    try:
+        max_x_value = max(comment_list)
+    except:
+        print("no comment_list")
+        pass
+
     if final_comment_number < max_x_value:
         max_x_tick = max_x_value + 20
     else:
@@ -127,9 +134,15 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
     max_y = 100
     max_x = 100
     if post_list:
-        max_y = max(post_list)
+        try:
+            max_y = max(post_list)
+        except:
+            pass
     if comment_list:
-        max_x = max(comment_list)
+        try:
+            max_x = max(comment_list)
+        except:
+            pass
 
     #final_comment_number = 40
     plt.yticks([n for n in range(max_y + 20) if n % 5 == 0])
@@ -141,7 +154,7 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
     print("Start to scatter")
     p_scatter = ax1.scatter(comment_list, post_list, s=500, c = color, alpha=0.5, marker='o', cmap=plt.get_cmap("Spectral"))
 
-    y = [i for i in range(max(post_list)+20)]
+    y = [i for i in range(max_y+20)]
     x = [final_comment_number for i in range(len(y))]
     #Draw the final line
     ax1.plot(x, y, '--', alpha=0.4)
@@ -201,7 +214,7 @@ if __name__ == '__main__':
 [1640004140, u'ZHAO Joshua', 2, 0, u'https://mug0.assets-yammer.com/mugshot/images/48x48/no_photo.png'],
 [1569252594, 'unknown user', 1, 0, 'https://mug0.assets-yammer.com/mugshot/images/48x48/no_photo.png']]
 
-
+    #example_list = [] #test for none user case
     group_name = "Qingdao Center"
 
 
