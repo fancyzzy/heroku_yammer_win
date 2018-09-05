@@ -357,7 +357,7 @@ if __name__ == '__main__':
     group_id = 12562314 #Qingdao
     #access_token = '592-FnmLDb1cF0zMgyj32jnz0w'
 
-    from constants import ACCESS_TOKEN
+    from my_constants import ACCESS_TOKEN
     my_crawler = My_Crawler(ACCESS_TOKEN)
 
     '''

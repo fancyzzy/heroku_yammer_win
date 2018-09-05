@@ -361,7 +361,7 @@ if __name__ == '__main__':
     #group_id = 15273590 #English
     group_id = 12562314 #Qingdao
 
-    from constants import ACCESS_TOKEIN
+    from my_constants import ACCESS_TOKEIN
     #access_token = '592-FnmLDb1cF0zMgyj32jnz0w'
     my_yammer = My_Yammer(ACCESS_TOKEN)
 
