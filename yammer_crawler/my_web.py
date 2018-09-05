@@ -10,15 +10,15 @@ from flask import request
 from flask import make_response
 from flask import redirect
 from flask import abort
-
 from flask import render_template
 
-import my_yammer
 from datetime import datetime
 import time
-import my_plot
 import os
-from my_constants import ACCESS_TOKEN
+
+import yammer_crawler.my_yammer as my_yammer
+import yammer_crawler.my_plot as my_plot
+from yammer_crawler.my_constants import ACCESS_TOKEN
 
 app = Flask(__name__)
 
@@ -164,6 +164,8 @@ def get_rank_result():
     # return render_template('yammer_rank.html', mylist=yammer_result, img_name=img_url)
     print("DEBUG start to created png")
     # 转成图片的步骤
+    # tkinter RuntimeError: main thread is not in main loop
+    # here need another thread?
     plt = my_plot.draw_figure(yammer_result, 0, end_date, start_date, final_comment_num, show_top, group_name)
     print("Get plt id: {}".format(id(plt)))
 

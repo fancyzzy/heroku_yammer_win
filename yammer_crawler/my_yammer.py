@@ -6,8 +6,8 @@ from datetime import datetime
 import openpyxl
 import os
 
-import my_database
-import my_crawler
+import yammer_crawler.my_database as my_database
+import yammer_crawler.my_crawler as my_crawler
 
 #solve flask multithread trigger
 #import pythoncom
@@ -154,7 +154,7 @@ class My_Yammer():
         '''
 
         existed_users = self.my_db.get_group_users(str(group_id))
-        print("DEBUG existed_users: {}".format(existed_users))
+        #print("DEBUG existed_users: {}".format(existed_users))
 
         #convert to id:user_data dict
         users_info = {}
@@ -361,7 +361,7 @@ if __name__ == '__main__':
     #group_id = 15273590 #English
     group_id = 12562314 #Qingdao
 
-    from my_constants import ACCESS_TOKEIN
+    from yammer_crawler.my_constants import ACCESS_TOKEN
     #access_token = '592-FnmLDb1cF0zMgyj32jnz0w'
     my_yammer = My_Yammer(ACCESS_TOKEN)
 

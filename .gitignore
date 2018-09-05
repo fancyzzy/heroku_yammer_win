@@ -4,3 +4,6 @@
 yammer_crawler/__pycache__/
 __pycache__/
 yammer_crawler/__pycache__/constants.cpython-36.pyc
+*.json
+*.json
+yammer_crawler/data/group_12562314_messages.json

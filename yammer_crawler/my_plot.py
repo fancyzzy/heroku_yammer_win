@@ -7,7 +7,8 @@ Use matplotlib to draw  figures of  post and updates points
 
 # for MacOS
 import matplotlib
-matplotlib.use('TkAgg')
+#matplotlib.use('TkAgg')
+matplotlib.use('Agg')
 # for MacOS
 
 import matplotlib.pyplot as plt
@@ -80,12 +81,12 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
     '''
 
     if (data_list) == None:
-        print("Nothing")
+        print("Plot nothing")
         return
 
     final_comment_number = int(final_comment_number)
     show_top = int(show_top)
-    print("DEBUG start draw_figure")
+
     if date_start == None:
         date_start = "beginning"
     if date_end == None:
@@ -96,29 +97,14 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
     name_list = [x[1] for x in data_list if x[2]>threshold or x[3]>threshold]
     photo_list= [x[-1] for x in data_list if x[2]>threshold or x[3]>threshold]
 
-    print("DEBUG comment_list: {}".format(comment_list))
-    max_x_value = 100
-    try:
-        max_x_value = max(comment_list)
-    except:
-        print("no comment_list")
-        pass
+    #print("DEBUG comment_list: {}".format(comment_list))
 
-    if final_comment_number < max_x_value:
-        max_x_tick = max_x_value + 20
-    else:
-        max_x_tick = final_comment_number + 20
-
-    print("start color")
     color = np.arctan2(post_list, comment_list)
-    print("DEBUG color: {}".format(color))
 
-    print("start plt.figure with plt id:{}".format(id(plt)))
     #fig= plt.figure(figsize=(8.0, 5.0))
     #Set fig size/resolution
     fig= plt.figure(figsize=(11.0, 7.5))
 
-    print("start fig.add_subplot")
     ax1 = fig.add_subplot(111)
 
 
@@ -144,9 +130,22 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
         except:
             pass
 
+    if final_comment_number < max_x:
+        max_x_tick = max_x + 20
+    else:
+        max_x_tick = final_comment_number + 20
+
     #final_comment_number = 40
-    plt.yticks([n for n in range(max_y + 20) if n % 5 == 0])
-    plt.xticks([n for n in range(max_x_tick) if n % 5 == 0])
+    print("DEBUGGGGGGGGGGG max_x_tick: {}, max_y: {}".format(max_x_tick, max_y))
+    interval_y = 5
+    interval_x = 5
+    if (max_y+20)//20 > 5:
+        interval_y = (max_y+20) //20
+    if (max_x_tick+20)//20 > 5:
+        interval_x = (max_x_tick+20) //20
+    print("DEBUGGGGGGGGGGG interval_x: {}, interval_y: {}".format(interval_x,interval_y))
+    plt.yticks([n for n in range(max_y + 20) if n % interval_y == 0])
+    plt.xticks([n for n in range(max_x_tick) if n % interval_x == 0])
     plt.ylim(-5, max_y+25)
     #plt.xlim(-5, max_x+25)
     plt.xlim(-5, max_x_tick)
