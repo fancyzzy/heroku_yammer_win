@@ -11,6 +11,7 @@ from flask import make_response
 from flask import redirect
 from flask import abort
 from flask import render_template
+from flask import session
 
 from datetime import datetime
 import time
@@ -21,6 +22,7 @@ import yammer_crawler.my_plot as my_plot
 from yammer_crawler.my_constants import ACCESS_TOKEN
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.urandom(24)
 
 '''
 @app.route('/')
@@ -57,13 +59,25 @@ def index():
 @app.route('/yammer_rank', methods=["POST"])
 def yammer_rank():
     '''
-    login via oauth
+    Input param to show rankings
     '''
+    if not ACCESS_TOKEN:
+        if not session.get("user_id"):
+            #login via oauth
+            #ACCESS_TOKEN =
+            pass
+
+
     ya = my_yammer.My_Yammer(ACCESS_TOKEN)
     groups = ya.get_groups()
-    user_name = ya.get_current_name()
+    user_name, user_id = ya.get_current_name_id()
     print("DEBUG groups: {}".format(groups))
+    session["user_name"] = user_name
+    session["user_id"] = user_id
+    session["access_token"] = ACCESS_TOKEN
+    session.permanent = True
     #return auth_url
+
 
     print("DEBUG you click the login button")
 

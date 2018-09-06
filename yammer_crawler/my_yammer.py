@@ -24,10 +24,10 @@ class My_Yammer():
 
     ##########__init__()################################
 
-    def get_current_name(self):
+    def get_current_name_id(self):
 
         u = self.my_crawler.user_name
-        return u["full_name"].split(',')[0] + ' ' + u["full_name"].split(', ')[1].split()[0]
+        return u["full_name"].split(',')[0] + ' ' + u["full_name"].split(', ')[1].split()[0], u["id"]
     ##############get_current_name()######################
 
 
