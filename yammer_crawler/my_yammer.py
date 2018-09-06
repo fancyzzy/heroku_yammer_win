@@ -24,6 +24,12 @@ class My_Yammer():
 
     ##########__init__()################################
 
+    def get_current_name(self):
+
+        u = self.my_crawler.user_name
+        return u["full_name"].split(',')[0] + ' ' + u["full_name"].split(', ')[1].split()[0]
+    ##############get_current_name()######################
+
 
     def pull_all_messages(self, group_id, interval=1):
 

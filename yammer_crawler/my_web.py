@@ -61,12 +61,13 @@ def yammer_rank():
     '''
     ya = my_yammer.My_Yammer(ACCESS_TOKEN)
     groups = ya.get_groups()
+    user_name = ya.get_current_name()
     print("DEBUG groups: {}".format(groups))
     #return auth_url
 
     print("DEBUG you click the login button")
 
-    return render_template("yammer_rank.html", groups=groups)
+    return render_template("yammer_rank.html", user_name=user_name, groups=groups)
 
 
 def oauth_login():

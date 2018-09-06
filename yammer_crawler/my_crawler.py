@@ -80,9 +80,11 @@ class My_Crawler():
             return
 
         self.yampy = yampy.Yammer(access_token=access_token)
+        self.user_name = self.yampy.users.find_current()
 
         #dynamicly add method
         self.yampy.messages.from_group = MethodType(from_group, self.yampy.messages)
+
 
         print("Init finished")
 
