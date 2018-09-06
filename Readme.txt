@@ -4,3 +4,8 @@ install: pip install yampy3
 There is another updated yampy:
 github: https://github.com/tonybaloney/yampy2
 web: https://yampy2.readthedocs.io/en/latest/quickstart.html
+
+
+Heroku git remote:
+heroku git:remote -a yammerstate
+https://git.heroku.com/yammerstate.git
