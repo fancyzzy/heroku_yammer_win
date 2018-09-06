@@ -6,12 +6,8 @@ from datetime import datetime
 import openpyxl
 import os
 
-import yammer_crawler.my_database as my_database
-import yammer_crawler.my_crawler as my_crawler
-
-#solve flask multithread trigger
-#import pythoncom
-#pythoncom.CoInitialize()
+import yammer_rank.my_database as my_database
+import yammer_rank.my_crawler as my_crawler
 
 
 class My_Yammer():

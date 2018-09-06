@@ -17,9 +17,9 @@ from datetime import datetime
 import time
 import os
 
-import yammer_crawler.my_yammer as my_yammer
-import yammer_crawler.my_plot as my_plot
-from yammer_crawler.my_constants import ACCESS_TOKEN
+import yammer_rank.my_yammer as my_yammer
+import yammer_rank.my_plot as my_plot
+from yammer_rank.my_constants import ACCESS_TOKEN
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
