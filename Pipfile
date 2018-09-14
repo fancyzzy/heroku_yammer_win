@@ -11,6 +11,8 @@ matplotlib = "*"
 flask-script = "*"
 flask-migrate = "*"
 flask-bootstrap = "*"
+waitress = "*"
+gunicorn = "*"
 
 [dev-packages]
 
