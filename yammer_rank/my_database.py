@@ -8,6 +8,7 @@ import os
 import json
 
 DATA_PATH = os.path.join(os.getcwd(), 'data')
+print("DEBUGGGGGGGGGG DATA_PATH: {}".format(DATA_PATH))
 GROUP_DB = 'groups.json'
 GROUP_DB_PATH = os.path.join(DATA_PATH, GROUP_DB)
 
@@ -94,6 +95,7 @@ class My_Database():
         file_name = 'group_%s_messages.json'%(group_id)
         file_path = os.path.join(DATA_PATH, file_name)
 
+        print("DEBUG file_path: {}".format(file_path))
         with open(file_path, 'w') as fb:
             data_str = json.dumps(dict_data)
             fb.write(data_str)

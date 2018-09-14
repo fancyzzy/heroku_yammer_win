@@ -7,9 +7,6 @@ This is for the webpage
 
 from flask import Flask
 from flask import request
-from flask import make_response
-from flask import redirect
-from flask import abort
 from flask import render_template
 from flask import session
 
@@ -17,15 +14,16 @@ from datetime import datetime
 import time
 import os
 
-import yammer_rank.my_yammer as my_yammer
-import yammer_rank.my_plot as my_plot
-from yammer_rank.my_constants import ACCESS_TOKEN
+from . import main
+from .. import my_yammer
+from .. import my_plot
+from .. import my_constants
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(24)
+#app = Flask(__name__)
+#app.config['SECRET_KEY'] = os.urandom(24)
 
 '''
-@app.route('/')
+@main.route('/')
 def index():
 
     if ACCESS_TOKEN == None:
@@ -46,7 +44,7 @@ def index():
     return render_template('login.html', groups=groups)
 '''
 
-@app.route('/')
+@main.route('/')
 def index():
 
     '''
@@ -56,25 +54,47 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/yammer_rank', methods=["POST"])
+def oauth_login():
+    access_token = None
+    auth_url = \
+        'https://www.yammer.com/dialog/oauth?client_id=2fxbPxiDYwtM40yN3m0fQ&redirect_uri=https%3A%2F%2Fyammerstate.herokuapp.com'
+
+    if my_constants.ACCESS_TOKEN == None:
+        #need to login via oauth
+        print("DEBUG ACCESS_TOKEN == NONE, need to login.")
+        pass
+    else:
+        #Add token into the session
+        print("ACCESS_TOKEN is existed.")
+        pass
+
+    ya = my_yammer.My_Yammer(my_constants.ACCESS_TOKEN)
+    groups = ya.get_groups()
+    print("DEBUG groups: {}".format(groups))
+    #return auth_url
+
+    return access_token
+
+
+@main.route('/yammer_rank', methods=["POST"])
 def yammer_rank():
     '''
     Input param to show rankings
     '''
-    if not ACCESS_TOKEN:
+    if not my_constants.ACCESS_TOKEN:
         if not session.get("user_id"):
             #login via oauth
             #ACCESS_TOKEN =
             pass
 
 
-    ya = my_yammer.My_Yammer(ACCESS_TOKEN)
+    ya = my_yammer.My_Yammer(my_constants.ACCESS_TOKEN)
     groups = ya.get_groups()
     user_name, user_id = ya.get_current_name_id()
-    print("DEBUG groups: {}".format(groups))
+    print("DEBUGGGGGGGGGGGGGGGG groups: {}".format(groups))
     session["user_name"] = user_name
     session["user_id"] = user_id
-    session["access_token"] = ACCESS_TOKEN
+    session["access_token"] = my_constants.ACCESS_TOKEN
     session.permanent = True
     #return auth_url
 
@@ -84,30 +104,11 @@ def yammer_rank():
     return render_template("yammer_rank.html", user_name=user_name, groups=groups)
 
 
-def oauth_login():
-    access_token = None
-    auth_url = \
-        'https://www.yammer.com/dialog/oauth?client_id=2fxbPxiDYwtM40yN3m0fQ&redirect_uri=https%3A%2F%2Fyammerstate.herokuapp.com'
 
-    if ACCESS_TOKEN == None:
-        #need to login via oauth
-        print("DEBUG ACCESS_TOKEN == NONE, need to login.")
-        pass
-    else:
-        #Add token into the session
-        print("ACCESS_TOKEN is existed.")
-        pass
-
-    ya = my_yammer.My_Yammer(ACCESS_TOKEN)
-    groups = ya.get_groups()
-    print("DEBUG groups: {}".format(groups))
-    #return auth_url
-
-    return access_token
 
 
 #return the rank page!
-@app.route('/rank_result', methods=['POST', 'GET'])
+@main.route('/rank_result', methods=['POST', 'GET'])
 def get_rank_result():
 
     end_date = None
@@ -172,7 +173,7 @@ def get_rank_result():
 
     # group_id = 15273590
     # group_id = 12562314
-    ya = my_yammer.My_Yammer(ACCESS_TOKEN)
+    ya = my_yammer.My_Yammer(my_constants.ACCESS_TOKEN)
     group_name = ya.get_group_name(group_id)
     yammer_result = ya.get_group_rank(group_id, letter_num, least_comment_num,\
                                       end_date, start_date, rank_for_post)
@@ -206,6 +207,6 @@ def get_rank_result():
 if __name__ == '__main__':
 
 
-    app.run(debug=True)
+    #app.run(debug=True)
     #manager.run()
     print("done")

@@ -8,6 +8,9 @@ openpyxl = "*"
 flask = "*"
 "yampy3" = "*"
 matplotlib = "*"
+flask-script = "*"
+flask-migrate = "*"
+flask-bootstrap = "*"
 
 [dev-packages]
 
