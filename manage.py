@@ -3,8 +3,8 @@ import os
 from flask_script import Manager, Shell, Server
 from yammer_rank import create_app
 
-config_file = os.getenv('FLASK_CONFIG')
-print("config_file: {}".format(config_file))
+config_name = os.getenv('FLASK_CONFIG')
+print("manage.py, config_name: {}".format(config_name))
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 #migrate = Migrate(app, db)

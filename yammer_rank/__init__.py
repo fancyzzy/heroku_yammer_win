@@ -2,7 +2,8 @@ from flask import Flask
 from config import config
 
 
-print(config['development'])
+print("yammer_rank/__init__.py, config: {}".format(config))
+print("yammer_rank/__init__.py, DEBUG __name__: {}".format(__name__))
 
 def create_app(config_name):
     app = Flask(__name__)

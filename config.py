@@ -31,10 +31,16 @@ class ProductionConfig(Config):
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
+class Heroku(Config):
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+
 config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
-    'prodection': ProductionConfig,
-
+    'production': ProductionConfig,
+    'heroku': Heroku,
     'default': DevelopmentConfig
 }
