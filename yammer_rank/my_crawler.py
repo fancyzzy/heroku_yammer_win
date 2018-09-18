@@ -11,6 +11,8 @@ Use yampy to download json data
 
 import json
 import yampy
+from yampy import errors
+
 import time
 
 
@@ -80,7 +82,8 @@ class My_Crawler():
             return
 
         self.yampy = yampy.Yammer(access_token=access_token)
-        self.user_name = self.yampy.users.find_current()
+        self.user_info = self.yampy.users.find_current()
+        print("DEBUG self. user_info: {}".format(self.user_info))
 
         #dynamicly add method
         self.yampy.messages.from_group = MethodType(from_group, self.yampy.messages)
@@ -102,11 +105,18 @@ class My_Crawler():
         print("Check group name in 'meta','feed_name' of {}".format(group_messages_url))
 
         # Call yampy API
-        json_dict = self.yampy.messages.from_group(int(group_id))
+        try:
+            json_dict = self.yampy.messages.from_group(int(group_id))
+        except errors.NotFoundError:
+            print("Not found via this group id")
+            return None
 
         if json_dict != None:
-            group_name = json_dict["meta"]["feed_name"]
-            return group_name
+            if "feed_name" in json_dict["meta"].keys():
+                group_name = json_dict["meta"]["feed_name"]
+                return group_name
+            else:
+                return None
         else:
             return None
     ##########get_group_name()#####################
@@ -179,7 +189,7 @@ class My_Crawler():
     ###########download_all_messages()###################################################
 
 
-    def download_newer_messages(self, group_id, newer_than_message_id, interval=5):
+    def download_newer_messages(self, group_id, newer_than_message_id, interval=1):
         '''
         Download newer messages based on the existing database
 
@@ -220,11 +230,14 @@ class My_Crawler():
                 #May have same messages
                 extend_diff(newer_json_result["messages"], json_dict["messages"])
 
-                extend_diff(newer_json_result["references"], json_dict["references"])
-                extend_diff(newer_json_result["meta"]["followed_user_ids"],\
-                            json_dict["meta"]["followed_user_ids"])
-                extend_diff(newer_json_result["meta"]["followed_references"],\
-                            json_dict["meta"]["followed_references"])
+                if "references" in json_dict.keys():
+                    extend_diff(newer_json_result["references"], json_dict["references"])
+
+                if "followed_user_ids" in json_dict["meta"].keys():
+                    extend_diff(newer_json_result["meta"]["followed_user_ids"], json_dict["meta"]["followed_user_ids"])
+
+                if "followed_references" in json_dict["meta"].keys():
+                    extend_diff(newer_json_result["meta"]["followed_references"], json_dict["meta"]["followed_references"])
 
             # Check to stop, if < 20 means download complete
             if len(json_dict["messages"]) < API_RESTRICT:
@@ -294,7 +307,7 @@ class My_Crawler():
             print("url: {}".format(group_users_url))
 
             #Call yampy API
-            json_dict = self.yampy.users.in_group(group_id, page_num)
+            json_dict = self.yampy.users.in_group(int(group_id), page_num)
 
             #concatenate json_str to json_result
             if json_result == None:
@@ -374,11 +387,12 @@ if __name__ == '__main__':
 
 
     #test download and save all users in the group
-    
-    result_json = my_crawler.download_all_users(int(group_id), interval=1)
-    print("Debug users number: {}, result_json: {}".format(len(result_json["users"]), result_json))
 
     '''
+    result_json = my_crawler.download_all_users(int(group_id), interval=1)
+    print("Debug users number: {}, result_json: {}".format(len(result_json["users"]), result_json))
+    '''
+
     #Test to download newer messages
     newer_than_message_id = '1147793449'
     newer_result_json = my_crawler.download_newer_messages(group_id, newer_than_message_id, interval=1)
@@ -388,7 +402,6 @@ if __name__ == '__main__':
     else:
         print("None newer messages")
 
-    '''
     print("done")
 
 

@@ -14,18 +14,49 @@ class My_Yammer():
 
     def __init__(self, access_token):
 
-        self.my_db = my_database.My_Database()
+
         self.my_crawler = my_crawler.My_Crawler(access_token)
+
+        #if db is postgres
+        #self.my_db = my_database.My_Postgres()
+        self.my_db = my_database.My_Database()
+
         print("my_yammer init finished")
 
     ##########__init__()################################
 
-    def get_current_name_id(self):
+    def get_current_user(self):
+        '''
 
-        u = self.my_crawler.user_name
+        the user is based on the token
+        :return: username, userid
+        '''
+
+        u = self.my_crawler.user_info
         return u["full_name"].split(',')[0] + ' ' + u["full_name"].split(', ')[1].split()[0], u["id"]
     ##############get_current_name()######################
 
+
+    def get_current_groups(self):
+        '''
+
+        :return: groups {'id':'name',...}
+        '''
+        return self.my_db.get_all_groups_name_id()
+    ##################get_current_group_names()####################
+
+
+    def pull_group_name(self, group_id):
+        '''
+        check if this group_id is valid by returning the group_name
+        if none invalid
+
+        :param group_id:
+        :return:  group_name
+        '''
+
+        return self.my_crawler.get_group_name(group_id)
+    ####################pull_group_name()#########################
 
     def pull_all_messages(self, group_id, interval=1):
 
@@ -45,8 +76,17 @@ class My_Yammer():
 
 
     def pull_newer_messages(self, group_id, interval=1):
+        '''
+        download all the messages of a group. first retrive form the db and then retrive the latest messages and combine
+        them and return.
+
+        :param group_id:
+        :param interval:
+        :return:
+        '''
 
         print("start pull_newer_messages, group_id = {}".format(group_id))
+        #Get already buffered messages from db
         existed_messages = self.my_db.get_group_messages(str(group_id))
 
         #Continue to download messages that are newer that the latest existed message
@@ -132,6 +172,7 @@ class My_Yammer():
         existed_messages = self.my_db.get_group_messages(str(group_id))
         if existed_messages == None:
             print("Group data is not existed yet")
+            return None
         else:
             return existed_messages["meta"]["feed_name"]
     ########get_group_name###########################################
@@ -160,8 +201,9 @@ class My_Yammer():
 
         #convert to id:user_data dict
         users_info = {}
-        for user in existed_users["users"]:
-            users_info[user["id"]] = user
+        if existed_users != None and "users" in existed_users.keys():
+            for user in existed_users["users"]:
+                users_info[user["id"]] = user
 
         return users_info
     ########get_group_users()#####################################
@@ -181,25 +223,22 @@ class My_Yammer():
     ##############get_user_info()##################################
 
 
-    def get_groups(self):
-        return self.my_db.get_all_groups_name_id()
-    ##################get_current_group_names()####################
-
-
     #Game
     def get_group_rank(self, group_id, letter_num=1, least_comment_num=1, end_date=None, start_date=None,\
                        is_sorted_for_post=False):
         '''
-        Get a sorted list which contatin user name, message num which is the key to rank
+        Get a sorted list which contain user name, message num which is the key to rank
         Only return those users who had sent messages. For those not sent even one message,
-        The return list does not contatin them
+        The return list does not contain them
+        note: To make sure the result is completed for the latest messages and users, this procedure will call
+        pull_newer_message and pull_all_users functions.
 
         :param group_id:
         :param letter_num: letter number of a message content
         :param least_comment_num: number of messages sent
         :param end_date:   liek '2018/08/07'
         :param start_date: '2018/02/01'
-        :return: list: [[id, name, comment, post],...]
+        :return: ranked_list: [[id, name, comment, post],...]
         '''
         print("Start show group rank with at least letter_num: {}, least_comment_num: {}, from date: {} to {}".\
               format(letter_num, least_comment_num, end_date, start_date))
@@ -208,16 +247,19 @@ class My_Yammer():
         d_users = {}
         #result_list = [[id,total_message_number, post_message_number],...]
         result_list = []
+        ranked_list = []
         n = 0
         n_post = 0
 
-        messages = self.get_group_messages(group_id)
+        #upadte the latest messages into the db
+        self.pull_newer_messages(group_id, interval=0)
+        existed_messages = self.get_group_messages(group_id)
 
-        if messages == None:
+        if existed_messages == None:
             print("nothing")
-            return
+            return None
 
-        for message in messages["messages"]:
+        for message in existed_messages["messages"]:
 
             created_date = message["created_at"].split()[0]
 
@@ -258,6 +300,11 @@ class My_Yammer():
 
         #get user name by id and append user id and  photo
         user_info = self.get_group_users(group_id)
+        print("DEBUG my_yammer.py, user_info: {}".format(user_info))
+        if (user_info == None) or (len(user_info)==0):
+            self.pull_all_users(group_id, interval=0)
+        user_info = self.get_group_users(group_id)
+
         unknown_num = 0
         for user in ranked_list:
             user_id = user[0]
@@ -367,8 +414,8 @@ if __name__ == '__main__':
     #access_token = '592-FnmLDb1cF0zMgyj32jnz0w'
     my_yammer = My_Yammer(ACCESS_TOKEN)
 
-    my_yammer.pull_newer_messages(group_id, interval=1)
-    my_yammer.pull_all_users(group_id, interval=1)
+    #my_yammer.pull_newer_messages(group_id, interval=1)
+    #my_yammer.pull_all_users(group_id, interval=1)
 
     #str_now = datetime.now().strftime("%Y/%m/%d")
     #my_yammer.get_group_rank(group_id, letter_num=0, end_date=str_now, start_date=None)

@@ -68,7 +68,7 @@ def authorized():
     #return jsonify(me.data)
 
     ya = my_yammer.My_Yammer()
-    groups = ya.get_groups()
+    groups = ya.get_current_groups()
     print("DEBUG groups: {}".format(groups))
     return render_template('login.html', groups=groups)
 

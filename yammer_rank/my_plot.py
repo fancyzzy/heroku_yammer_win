@@ -81,8 +81,9 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
     '''
 
     if (data_list) == None:
-        print("Plot nothing")
+        print("data_list is None, plot nothing")
         return
+    #print("DEBUGGGGGGGGGGGGGGGGGGGGGG data_list:{}".format(data_list))
 
     final_comment_number = int(final_comment_number)
     show_top = int(show_top)
@@ -136,21 +137,18 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
         max_x_tick = final_comment_number + 20
 
     #final_comment_number = 40
-    print("DEBUGGGGGGGGGGG max_x_tick: {}, max_y: {}".format(max_x_tick, max_y))
     interval_y = 5
     interval_x = 5
     if (max_y+20)//20 > 5:
         interval_y = (max_y+20) //20
     if (max_x_tick+20)//20 > 5:
         interval_x = (max_x_tick+20) //20
-    print("DEBUGGGGGGGGGGG interval_x: {}, interval_y: {}".format(interval_x,interval_y))
     plt.yticks([n for n in range(max_y + 20) if n % interval_y == 0])
     plt.xticks([n for n in range(max_x_tick) if n % interval_x == 0])
     plt.ylim(-5, max_y+25)
     #plt.xlim(-5, max_x+25)
     plt.xlim(-5, max_x_tick)
 
-    print("Start to scatter")
     p_scatter = ax1.scatter(comment_list, post_list, s=500, c = color, alpha=0.5, marker='o', cmap=plt.get_cmap("Spectral"))
 
     y = [i for i in range(max_y+20)]
@@ -170,10 +168,6 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
 
     txt_height = 0.0224 * (plt.ylim()[1] - plt.ylim()[0])
     txt_width = 0.045 * (plt.xlim()[1] - plt.xlim()[0])
-    print("DEBUG plt.ylim()[1]: {}".format(plt.ylim()[1]))
-    print("DEBUG plt.ylim()[0]: {}".format(plt.ylim()[0]))
-    print("DEBUG plt.xlim()[1]: {}".format(plt.xlim()[1]))
-    print("DEBUG plt.xlim()[0]: {}".format(plt.xlim()[0]))
     #txt_height = 0.51
     #txt_width = 5
     text_positions = get_text_positions(labels, comment_list, post_list, txt_width, txt_height)
@@ -185,8 +179,6 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
     #Delete right and top spines
     ax1.spines['top'].set_color('none')
     ax1.spines['right'].set_color('none')
-
-    print("Return plt, id: {}".format(id(plt)))
 
     return plt
 ################draw_figure()##################################################################

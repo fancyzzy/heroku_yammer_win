@@ -8,7 +8,7 @@ import os
 import json
 
 DATA_PATH = os.path.join(os.getcwd(), 'data')
-print("DEBUGGGGGGGGGG DATA_PATH: {}".format(DATA_PATH))
+print("m_dtaba.py,  DATA_PATH: {}".format(DATA_PATH))
 GROUP_DB = 'groups.json'
 GROUP_DB_PATH = os.path.join(DATA_PATH, GROUP_DB)
 

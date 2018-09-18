@@ -47,7 +47,7 @@ def oauth_login():
         pass
 
     ya = my_yammer.My_Yammer(my_constants.ACCESS_TOKEN)
-    groups = ya.get_groups()
+    groups = ya.get_current_groups()
     print("DEBUG groups: {}".format(groups))
     #return auth_url
 
@@ -68,10 +68,10 @@ def yammer_rank():
         print("ACCESS_TOKEN: {}".format(my_constants.ACCESS_TOKEN))
 
     ya = my_yammer.My_Yammer(my_constants.ACCESS_TOKEN)
-    user_name, user_id = ya.get_current_name_id()
+    user_name, user_id = ya.get_current_user()
     #here should get groups the cureent user joined in
-    groups = ya.get_groups()
-    print("DEBUGGGGGGGGGGGGGGGG groups: {}".format(groups))
+    groups = ya.get_current_groups()
+    print("views.py, def yammer_rank,  groups: {}".format(groups))
     session["user_name"] = user_name
     session["user_id"] = user_id
     session["access_token"] = my_constants.ACCESS_TOKEN
@@ -81,7 +81,8 @@ def yammer_rank():
 
     print("DEBUG you click the login button")
 
-    return render_template("yammer_rank.html", user_name=user_name, groups=groups)
+    #return render_template("yammer_rank.html", user_name=user_name, groups=groups)
+    return render_template("yammer_rank.html", user_name=user_name)
 
 
 #return the rank page!
@@ -96,6 +97,8 @@ def get_rank_result():
     show_top = 10
     group_id = '15273590'
     rank_for_post = False
+    #The final rankings
+    yammer_result = None
 
     if request.method == 'POST':
         # yammer_result = ["a", "b", "c"]
@@ -110,6 +113,9 @@ def get_rank_result():
         print("DEBUG show_top: {}".format(show_top))
         group_id = request.form['sel_group']
         print("DEBUG group_id: {}".format(group_id))
+        #check group id validation
+
+
         rank_for_post = int(request.form['rank_for_post'])
         if rank_for_post == 0:
             rank_for_post = False
@@ -151,9 +157,23 @@ def get_rank_result():
     # group_id = 15273590
     # group_id = 12562314
     ya = my_yammer.My_Yammer(my_constants.ACCESS_TOKEN)
-    group_name = ya.get_group_name(group_id)
-    yammer_result = ya.get_group_rank(group_id, letter_num, least_comment_num,\
-                                      end_date, start_date, rank_for_post)
+    group_name = ya.pull_group_name(group_id)
+    if group_name == None:
+        #wrong group id
+        #alert(invalid group id)
+        return "Invalid group id"
+    else:
+
+        #if new user, refresh the db user info
+        #pass
+
+        yammer_result = ya.get_group_rank(group_id, letter_num, least_comment_num, \
+                                          end_date, start_date, rank_for_post)
+
+
+    if yammer_result == None:
+        print("None message data, perhaps wrong group id!")
+
     # return render_template('yammer_rank.html', mylist=yammer_result, img_name=img_url)
     print("DEBUG start to created png")
     # 转成图片的步骤

@@ -12,12 +12,13 @@
 <h4>Select group, end date and start date to get the rank result</h4>
 <form method="post" action="/rank_result">
     <br>
-    group name
-    <select name="sel_group" id="id_sel_group">
+    group id
+    <input type="text" id="id_sel_group" name="sel_group" placeholder="Enter group id"/>
+    <!--<select name="sel_group" id="id_sel_group">
         {% for group in groups %}
             <option value = {{ group[1] }}> {{ group[0] }}</option>
         {% endfor %}
-    </select>
+    </select>-->
     <br>
     from date
     <input type="date" id="id_end_date" name="end_date" placeholder="Enter end date"/>
