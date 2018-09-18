@@ -315,6 +315,13 @@ class My_Yammer():
                 user[0] = user_name
                 user_photo = user_info[user_id]["mugshot_url"]
                 user.append(user_photo)
+
+                #web url
+                if "web_url" in user_info[user_id].keys():
+                    user_homepage = user_info[user_id]["web_url"]
+                    user.append(user_homepage)
+                else:
+                    user.append("None web_url")
             else:
                 print("DEBUG warning, unknown user: {} detected".format(user_id))
                 unknown_url = 'https://www.yammer.com/api/v1/users/' + str(user_id) + '.json'
@@ -322,6 +329,20 @@ class My_Yammer():
                 user[0] = 'unknown user'
                 none_photo = "https://mug0.assets-yammer.com/mugshot/images/48x48/no_photo.png"
                 user.append(none_photo)
+
+                #web url
+                '''
+                user_homepage = self.my_crawler.find_user_url(user_id)
+                if user_homepage:
+                    user.append(user_homepage)
+                else:
+                    user.append("None web_url")
+                '''
+                #user.append("None_web_url")
+                user_homepage = r"https://www.yammer.com/nokia.com/users/" + str(user_id)
+                user.append(user_homepage)
+
+
                 unknown_num += 1
 
             #insert id for future index purpose

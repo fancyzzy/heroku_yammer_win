@@ -14,7 +14,7 @@ No.  &nbsp&nbsp Name   &nbsp&nbsp Comment Number &nbsp&nbsp Post Number
 <ol>
     {% for item in mylist %}
     <li>
-        <img src = {{ item[4] }} />&nbsp&nbsp {{ item[1] }} &nbsp&nbsp {{ item[2] }}  &nbsp&nbsp {{ item[3] }}
+        <a href = {{ item[5] }} > <img src = {{ item[4] }} /></a>&nbsp&nbsp {{ item[1] }} &nbsp&nbsp {{ item[2] }}  &nbsp&nbsp {{ item[3] }}
     </li>
     {% endfor %}
 </ol>

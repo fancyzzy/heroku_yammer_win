@@ -366,10 +366,22 @@ class My_Crawler():
     ###########download_user_details()############################################
 
 
+    def find_user_url(self, user_id):
+
+        web_url = None
+        try:
+            web_url = self.yampy.users.find(user_id)["web_url"]
+        except Exception as e:
+            print("DEBUG no such user, error: {}".format(e))
+            return None
+        return web_url
+    ################find_user()##################################################
+
+
 if __name__ == '__main__':
 
-    group_id = 15273590 #English group
     group_id = 12562314 #Qingdao
+    group_id = 15273590 #English group
     #access_token = '592-FnmLDb1cF0zMgyj32jnz0w'
 
     from my_constants import ACCESS_TOKEN
@@ -402,7 +414,16 @@ if __name__ == '__main__':
     else:
         print("None newer messages")
 
+
+    user_id = 1538316736
+    user_url = my_crawler.find_user_url(user_id)
+    print("DEBUG web_url: {}".format(user_url))
+
+
+
+
     print("done")
+
 
 
 
