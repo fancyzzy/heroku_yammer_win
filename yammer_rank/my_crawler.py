@@ -83,13 +83,13 @@ class My_Crawler():
 
         self.yampy = yampy.Yammer(access_token=access_token)
         self.user_info = self.yampy.users.find_current()
-        print("DEBUG self. user_info: {}".format(self.user_info))
+        #print("DEBUG self. user_info: {}".format(self.user_info))
 
         #dynamicly add method
         self.yampy.messages.from_group = MethodType(from_group, self.yampy.messages)
 
 
-        print("Init finished")
+        print("DEBUG My crawler init finished")
 
     ############__init__()##############
 
@@ -102,13 +102,13 @@ class My_Crawler():
         '''
 
         group_messages_url = YAMMER_GROUP_MESSAGES + '%s.json'%(group_id)
-        print("Check group name in 'meta','feed_name' of {}".format(group_messages_url))
+        print("DEBUG Check group name in 'meta','feed_name' of {}".format(group_messages_url))
 
         # Call yampy API
         try:
             json_dict = self.yampy.messages.from_group(int(group_id))
         except errors.NotFoundError:
-            print("Not found via this group id")
+            print("DEBUG group messages not found via this group id")
             return None
 
         if json_dict != None:
@@ -135,7 +135,7 @@ class My_Crawler():
         :return: json liked dict
         '''
 
-        print("Start download all messages")
+        print("DEBUG Start download all messages")
         json_result = None
         json_str = None
         i = 0
@@ -146,8 +146,8 @@ class My_Crawler():
 
         while 1:
             i += 1
-            print("Download batch {}".format(i))
-            print("url: {}".format(group_messages_url))
+            print("DEBUG Download batch {}".format(i))
+            print("DEBUG url: {}".format(group_messages_url))
 
             #Call yampy API
             json_dict = self.yampy.messages.from_group(int(group_id), older_than_message_id)
@@ -159,7 +159,7 @@ class My_Crawler():
                 if "messages" in json_dict.keys():
                     json_result["messages"].extend(json_dict["messages"])
                 else:
-                    print("Error, there is no message key!")
+                    print("DEBUG Error, there is no message key!")
                     break
 
                 if "feferences" in json_dict.keys():
@@ -171,17 +171,17 @@ class My_Crawler():
 
             # Check to continue
             if json_dict["meta"]["older_available"]:
-                print("older available, sleep %d second.."%(interval))
+                print("DEBUG older available, sleep %d second.."%(interval))
                 time.sleep(interval)
                 older_than_message_id = json_dict["messages"][-1]["id"]
                 group_messages_url = YAMMER_GROUP_MESSAGES + '%s.json'%(group_id) + \
                                      '?older_than=%s'%(older_than_message_id)
             else:
-                print("No more messages, download finished")
+                print("DEBUG No more messages, download finished")
                 break
 
             if n and i >= n:
-                print("Stop download by %d times"%(n))
+                print("DEBUG Stop download by %d times"%(n))
                 break
 
         return json_result
@@ -198,7 +198,7 @@ class My_Crawler():
         :return: newer_json_result
         '''
 
-        print("Start download newer messages than %s"%(newer_than_message_id))
+        print("DEBUG Start download newer messages than %s"%(newer_than_message_id))
         newer_json_result = None
         json_str = None
         i = 0
@@ -209,8 +209,8 @@ class My_Crawler():
 
         while 1:
             i += 1
-            print("Download batch {}".format(i))
-            print("url: {}".format(group_messages_url))
+            print("DEBUG Download batch {}".format(i))
+            print("DEBUG url: {}".format(group_messages_url))
 
             #Call yampy API
             if not older_than_message_id:
@@ -220,7 +220,7 @@ class My_Crawler():
 
             #print("DEBUG json_dict: {}".format(json_dict))
             if len(json_dict["messages"]) == 0:
-                print("No new messages found.")
+                print("DEBUG No new messages found.")
                 break
 
             #concatenate json_str to newer_json_result
@@ -241,15 +241,15 @@ class My_Crawler():
 
             # Check to stop, if < 20 means download complete
             if len(json_dict["messages"]) < API_RESTRICT:
-                print("No more newer messages, download finished")
+                print("DEBUG No more newer messages, download finished")
                 break
             else:
                 for message_dict in json_dict["messages"]:
                     if message_dict["id"] == newer_than_message_id:
-                        print("No more newer messages, download finished")
+                        print("DEBUG No more newer messages, download finished")
                         break
 
-            print("more newer messages available, sleep %d second.."%(interval))
+            print("DEBUG more newer messages available, sleep %d second.."%(interval))
             time.sleep(interval)
             older_than_message_id = json_dict["messages"][-1]["id"]
             group_messages_url = YAMMER_GROUP_MESSAGES + '%s.json'%(group_id) + \
@@ -292,7 +292,7 @@ class My_Crawler():
         :return: json liked dict see:
         https://www.yammer.com/api/v1/users/in_group/15273590.json
         '''
-        print("Start download all users")
+        print("DEBUG Start download all users")
 
         json_result = None
         json_str = None
@@ -303,8 +303,8 @@ class My_Crawler():
 
         while 1:
             i += 1
-            print("Download batch {}".format(i))
-            print("url: {}".format(group_users_url))
+            print("DEBUG Download batch {}".format(i))
+            print("DEBUG url: {}".format(group_users_url))
 
             #Call yampy API
             json_dict = self.yampy.users.in_group(int(group_id), page_num)
@@ -318,18 +318,18 @@ class My_Crawler():
 
                     extend_diff(json_result["meta"]["followed_user_ids"], json_dict["meta"]["followed_user_ids"])
                 else:
-                    print("Can't find more users due to yammer api bug")
+                    print("DEBUG Can't find more users due to yammer api bug")
                     break
 
             # Check to continue
             if json_dict["more_available"]:
-                print("more available, sleep %d second.."%(interval))
+                print("DEBUG more available, sleep %d second.."%(interval))
                 time.sleep(interval)
 
                 page_num = i+1
                 group_users_url = YAMMER_GROUP_USERS + '%s.json'%(group_id) + '?page=%d'%(page_num)
             else:
-                print("No more users, download finished")
+                print("DEBUG No more users, download finished")
                 break
 
         return json_result
@@ -351,8 +351,8 @@ class My_Crawler():
         state = '' #if this id is still available
         user_url = user_dict["url"] + '.json'
         user_name = user_dict["full_name"]
-        print("Start download user detail of {}".format(user_name))
-        print("url: {}".format(user_url))
+        print("DEBUG Start download user detail of {}".format(user_name))
+        print("DEBUG url: {}".format(user_url))
         json_str = None
 
         #Call yampy API

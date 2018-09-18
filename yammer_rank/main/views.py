@@ -43,12 +43,12 @@ def oauth_login():
         pass
     else:
         #Add token into the session
-        print("ACCESS_TOKEN is existed.")
+        print("DEBUG ACCESS_TOKEN is existed.")
         pass
 
     ya = my_yammer.My_Yammer(my_constants.ACCESS_TOKEN)
     groups = ya.get_current_groups()
-    print("DEBUG groups: {}".format(groups))
+    #print("DEBUG groups: {}".format(groups))
     #return auth_url
 
     return access_token
@@ -65,13 +65,11 @@ def yammer_rank():
             #ACCESS_TOKEN =
             pass
     else:
-        print("ACCESS_TOKEN: {}".format(my_constants.ACCESS_TOKEN))
+        print("DEBUG Your ACCESS_TOKEN is: {}".format(my_constants.ACCESS_TOKEN))
 
     ya = my_yammer.My_Yammer(my_constants.ACCESS_TOKEN)
     user_name, user_id = ya.get_current_user()
-    #here should get groups the cureent user joined in
-    groups = ya.get_current_groups()
-    print("views.py, def yammer_rank,  groups: {}".format(groups))
+
     session["user_name"] = user_name
     session["user_id"] = user_id
     session["access_token"] = my_constants.ACCESS_TOKEN
@@ -80,7 +78,6 @@ def yammer_rank():
 
 
     print("DEBUG you click the login button")
-
     #return render_template("yammer_rank.html", user_name=user_name, groups=groups)
     return render_template("yammer_rank.html", user_name=user_name)
 
@@ -109,11 +106,9 @@ def get_rank_result():
         least_comment_num = request.form['least_comment_num']
         final_comment_num = request.form['final_comment_num']
         show_top = request.form['show_top']
-
-        print("DEBUG show_top: {}".format(show_top))
         group_id = request.form['sel_group']
-        print("DEBUG group_id: {}".format(group_id))
         #check group id validation
+        print("DEBUG you input group_id :{}".format(group_id))
 
 
         rank_for_post = int(request.form['rank_for_post'])
@@ -122,12 +117,11 @@ def get_rank_result():
         else:
             rank_for_post = True
 
-        print("DEBUG group_id :{}".format(group_id))
 
         if letter_num.isdigit():
             letter_num = int(letter_num)
         else:
-            print("no digit type!")
+            print("DEBUG no digit type!")
             letter_num = 1
 
         if least_comment_num.isdigit():
@@ -146,7 +140,7 @@ def get_rank_result():
             end_date = end_date.replace('-','/')
 
     if request.method == 'GET':
-        print("GET rank_result")
+        print("DEBUG GET rank_result")
         end_date = None
         start_date = None
         letter_num  = 1
@@ -172,7 +166,7 @@ def get_rank_result():
 
 
     if yammer_result == None:
-        print("None message data, perhaps wrong group id!")
+        print("DEBUG None message data, perhaps wrong group id!")
 
     # return render_template('yammer_rank.html', mylist=yammer_result, img_name=img_url)
     print("DEBUG start to created png")
@@ -180,7 +174,7 @@ def get_rank_result():
     # tkinter RuntimeError: main thread is not in main loop
     # here need another thread?
     plt = my_plot.draw_figure(yammer_result, 0, end_date, start_date, final_comment_num, show_top, group_name)
-    print("Get plt id: {}".format(id(plt)))
+    print("DEBUG Get plt id: {}".format(id(plt)))
 
     if start_date == None:
         start_date = "the ever biggning"

@@ -21,7 +21,7 @@ class My_Yammer():
         #self.my_db = my_database.My_Postgres()
         self.my_db = my_database.My_Database()
 
-        print("my_yammer init finished")
+        print("DEBUG My_Yammer init finished")
 
     ##########__init__()################################
 
@@ -69,7 +69,7 @@ class My_Yammer():
             print("Messages data saved successfully.")
             return True
         else:
-            print("No messages data saved.")
+            print("DEBUG No messages data saved.")
             return False
 
     ############pull_all_messages()###############################
@@ -85,7 +85,7 @@ class My_Yammer():
         :return:
         '''
 
-        print("start pull_newer_messages, group_id = {}".format(group_id))
+        print("DEBUG start pull_newer_messages, group_id = {}".format(group_id))
         #Get already buffered messages from db
         existed_messages = self.my_db.get_group_messages(str(group_id))
 
@@ -99,14 +99,14 @@ class My_Yammer():
             if newer_messages != None:
                 #merge newer_message to existed_messages
                 self.my_db.update_group_messages(existed_messages, newer_messages, group_id)
-                print("{} New messages data updateded successfully.".format(len(newer_messages)))
+                print("DEBUG {} New messages data updateded successfully.".format(len(newer_messages)))
                 return True
             else:
-                print("No messages data updateded.")
+                print("DEBUG No messages data updateded.")
                 return False
         #No existed messages, start to download for all
         else:
-            print("No existed data, pull all the messages")
+            print("DEBUG No existed data, pull all the messages")
             self.pull_all_messages(group_id, interval)
     #################pull_newer_messages()#########################
 
@@ -137,14 +137,14 @@ class My_Yammer():
         :param interval:
         :return:
         '''
-        print("Start to download each user detailed info of group {}".format(group_id))
+        print("DEBUG Start to download each user detailed info of group {}".format(group_id))
         existed_users = self.my_db.get_group_users(str(group_id))
 
         #download each user's detailed info
         n = 0
         for user_dict in existed_users["users"]:
 
-            print("Download batch: {}".format(n+1))
+            print("DEBUG Download batch: {}".format(n+1))
             dict_user = self.my_crawler.download_user_details(user_dict)
             self.my_db.save_group_user_details(dict_user, str(group_id))
             n += 1
@@ -171,7 +171,7 @@ class My_Yammer():
 
         existed_messages = self.my_db.get_group_messages(str(group_id))
         if existed_messages == None:
-            print("Group data is not existed yet")
+            print("DEBUG Group data is not existed yet")
             return None
         else:
             return existed_messages["meta"]["feed_name"]
@@ -240,7 +240,7 @@ class My_Yammer():
         :param start_date: '2018/02/01'
         :return: ranked_list: [[id, name, comment, post],...]
         '''
-        print("Start show group rank with at least letter_num: {}, least_comment_num: {}, from date: {} to {}".\
+        print("DEBUG Start show group rank with at least letter_num: {}, least_comment_num: {}, from date: {} to {}".\
               format(letter_num, least_comment_num, end_date, start_date))
 
         #{id:[total_message, post_message],...}
@@ -256,7 +256,7 @@ class My_Yammer():
         existed_messages = self.get_group_messages(group_id)
 
         if existed_messages == None:
-            print("nothing")
+            print("DEBUG existed message is none")
             return None
 
         for message in existed_messages["messages"]:
@@ -300,7 +300,7 @@ class My_Yammer():
 
         #get user name by id and append user id and  photo
         user_info = self.get_group_users(group_id)
-        print("DEBUG my_yammer.py, user_info: {}".format(user_info))
+        #print("DEBUG my_yammer.py, user_info: {}".format(user_info))
         if (user_info == None) or (len(user_info)==0):
             self.pull_all_users(group_id, interval=0)
         user_info = self.get_group_users(group_id)
@@ -316,9 +316,9 @@ class My_Yammer():
                 user_photo = user_info[user_id]["mugshot_url"]
                 user.append(user_photo)
             else:
-                print("warning, unknown user: {} detected".format(user_id))
+                print("DEBUG warning, unknown user: {} detected".format(user_id))
                 unknown_url = 'https://www.yammer.com/api/v1/users/' + str(user_id) + '.json'
-                print("check {} to find this user".format(unknown_url))
+                print("DEBUG check {} to find this user".format(unknown_url))
                 user[0] = 'unknown user'
                 none_photo = "https://mug0.assets-yammer.com/mugshot/images/48x48/no_photo.png"
                 user.append(none_photo)
@@ -330,11 +330,11 @@ class My_Yammer():
         if start_date == None:
             start_date = 'the ever beginning.'
         group_name = self.get_group_name(group_id)
-        print("In the group '{}',".format(group_name))
-        print("Totally {} comments and  {} posts from date {} back to {}".format(n, n_post, end_date, start_date))
-        print("Where {} people sent at least {} comments".format(len(result_list), least_comment_num))
+        print("DEBUG In the group '{}',".format(group_name))
+        print("DEBUG Totally {} comments and  {} posts from date {} back to {}".format(n, n_post, end_date, start_date))
+        print("DEBUG Where {} people sent at least {} comments".format(len(result_list), least_comment_num))
         if unknown_num > 0:
-            print("%d unknown user."%(unknown_num))
+            print("DEBUG %d unknown user."%(unknown_num))
 
         #rank_field = ["Id", "Full_Name", "Updats", "Posts", "Photo"]
 
@@ -349,7 +349,7 @@ class My_Yammer():
         :param group_id:
         :return:
         '''
-        print("Export to users details to excel of group: {}".format(group_id))
+        print("DEBUG Export to users details to excel of group: {}".format(group_id))
         dict_list = self.my_db.get_users_details(str(group_id))
 
         dest_folder = my_database.DATA_PATH
@@ -357,7 +357,7 @@ class My_Yammer():
         total_num = len(dict_list)
 
         if total_num == 0:
-            print("No user details found for group {}".format(group_id))
+            print("DEBUG No user details found for group {}".format(group_id))
             return False
 
         else:
@@ -395,7 +395,7 @@ class My_Yammer():
             folder_path = os.path.join(my_database.DATA_PATH, 'group_%s'%(group_id))
             excel_path =os.path.join(folder_path, excel_name)
             wb.save(filename=excel_path)
-            print("Export finished at {}".format(excel_path))
+            print("DEBUG Export finished at {}".format(excel_path))
             return True
     ################export_users_details_to_excel()########################################
 

@@ -6,9 +6,12 @@ Use MongoDB
 '''
 import os
 import json
+import config
 
-DATA_PATH = os.path.join(os.getcwd(), 'data')
-print("m_dtaba.py,  DATA_PATH: {}".format(DATA_PATH))
+
+#DATA_PATH = os.path.join(os.getcwd(), 'data')
+DATA_PATH = os.path.join(config.basedir, 'data')
+print("DEBUG my_database.py, DATA_PATH: {}".format(DATA_PATH))
 GROUP_DB = 'groups.json'
 GROUP_DB_PATH = os.path.join(DATA_PATH, GROUP_DB)
 
@@ -31,7 +34,9 @@ class My_Database():
             else:
                 pass
 
-        print("my database have group data: {}".format(self.group_db))
+        #print("Debug My Database have group data: {}".format(self.group_db))
+
+        print("DEBUG My Database init finished.")
 
     #########__init__()######################################################
 
@@ -44,7 +49,7 @@ class My_Database():
 
         existed_messages = self.get_group_messages(group_id)
         if existed_messages == None:
-            print("Group data is not existed yet")
+            print("DEBUG Group data is not existed yet")
         else:
             return existed_messages["meta"]["feed_name"]
     ########get_group_name###########################################
@@ -152,7 +157,7 @@ class My_Database():
             with open(file_path, 'w') as fb:
                 data_str = json.dumps(dict_data)
                 fb.write(data_str)
-            print("user details is saved in {}".format(file_path))
+            print("DEBUG user details is saved in {}".format(file_path))
     #################save_group_users_details()###################
 
 
@@ -249,7 +254,7 @@ class My_Database():
 
             return dict_list
         else:
-            print("folder {} not found.".format(folder_path))
+            print("DEBUG folder {} not found.".format(folder_path))
             return None
     ###########get_user_detailed_info()#####################
 

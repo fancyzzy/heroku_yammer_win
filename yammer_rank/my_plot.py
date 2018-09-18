@@ -81,7 +81,7 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
     '''
 
     if (data_list) == None:
-        print("data_list is None, plot nothing")
+        print("DEBUG data_list is None, plot nothing")
         return
     #print("DEBUGGGGGGGGGGGGGGGGGGGGGG data_list:{}".format(data_list))
 
@@ -111,9 +111,9 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
 
     s = ''
     if group_name != None:
-        s = "Comments&Posts of {} \n(from {} to {})".format(group_name, date_end, date_start)
+        s = "{} \nRankings (from {} to {})".format(group_name, date_end, date_start)
     else:
-        s = "Comments&Posts (from {} to {})".format(date_end, date_start)
+        s = "Rankings (from {} to {})".format(date_end, date_start)
     title_str = s
     ax1.set_title(title_str, fontsize=18)
     plt.ylabel("Posts", fontsize=12)
