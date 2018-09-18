@@ -26,9 +26,9 @@ YAMMER_GROUP_USERS = 'https://www.yammer.com/api/v1/users/in_group/'
 
 API_RESTRICT = 20
 
-MY_CLIENT_ID = '2fxbPxiDYwtM40yN3m0fQ'
-MY_CLIENT_SECRET = 'hJKivZUnqsl6vAP2NyaFodWK2nNDxHJ5MxwPtg4s'
-REDIRECT_URI = 'https://yammerstate.herokuapp.com'
+#MY_CLIENT_ID = '2fxbPxiDYwtM40yN3m0fQ'
+#MY_CLIENT_SECRET = 'hJKivZUnqsl6vAP2NyaFodWK2nNDxHJ5MxwPtg4s'
+#REDIRECT_URI = 'https://yammerrank.herokuapp.com'
 
 
 def extend_diff(list_source, list_new):

@@ -34,9 +34,6 @@ def index():
 
 def oauth_login():
     access_token = None
-    auth_url = \
-        'https://www.yammer.com/dialog/oauth?client_id=2fxbPxiDYwtM40yN3m0fQ&redirect_uri=https%3A%2F%2Fyammerstate.herokuapp.com'
-
     if my_constants.ACCESS_TOKEN == None:
         #need to login via oauth
         print("DEBUG ACCESS_TOKEN == NONE, need to login.")
