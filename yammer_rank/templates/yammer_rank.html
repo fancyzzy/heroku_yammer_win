@@ -13,7 +13,7 @@
 <form method="post" action="/rank_result">
     <br>
     group id
-    <input type="text" id="id_sel_group" name="sel_group" placeholder="Enter group id"/>
+    <input type="text" id="id_sel_group" name="sel_group" placeholder="Enter group id" oninput="value=value.replace(/[^\d]/g,'')"/>
     <!--<select name="sel_group" id="id_sel_group">
         {% for group in groups %}
             <option value = {{ group[1] }}> {{ group[0] }}</option>
