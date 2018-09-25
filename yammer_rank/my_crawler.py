@@ -78,7 +78,7 @@ class My_Crawler():
         '''
 
         if access_token == None:
-            print("DEBUG token = None")
+            print("DEBUG My_Crawler, token = None")
             return
 
         self.yampy = yampy.Yammer(access_token=access_token)

@@ -56,20 +56,32 @@ def yammer_rank():
     '''
     Input param to show rankings
     '''
+    access_token = None
     if not my_constants.ACCESS_TOKEN:
+        print("DEBUG, no ACCESS_TOKEN existed in my_constantst, login via Oauth start..")
         if not session.get("user_id"):
             #login via oauth
             #ACCESS_TOKEN =
+            access_token = None
+            if not access_token:
+                print("Get access_token failed")
             pass
     else:
-        print("DEBUG Your ACCESS_TOKEN is: {}".format(my_constants.ACCESS_TOKEN))
+        access_token = my_constants.Access_TOKEN
+        print("DEBUG Your ACCESS_TOKEN is: {}".format(access_token))
 
-    ya = my_yammer.My_Yammer(my_constants.ACCESS_TOKEN)
+    if access_token == None:
+        #No valid token, request return error login
+        print("Invalid login")
+        return ("login failed")
+        pass
+
+    ya = my_yammer.My_Yammer(access_token)
     user_name, user_id = ya.get_current_user()
 
     session["user_name"] = user_name
     session["user_id"] = user_id
-    session["access_token"] = my_constants.ACCESS_TOKEN
+    session["access_token"] = access_token
     session.permanent = True
     #return auth_url
 
