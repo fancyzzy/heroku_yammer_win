@@ -3,9 +3,13 @@ import os
 from flask_script import Manager, Shell, Server
 from yammer_rank import create_app
 
+from flask_oauthlib.client import OAuth
+
 config_name = os.getenv('FLASK_CONFIG')
 print("DEBUG manage.py, config_name retrived from OS envrionment: {}".format(config_name))
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+app = create_app(config_name or 'default')
+
+
 manager = Manager(app)
 #migrate = Migrate(app, db)
 

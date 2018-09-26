@@ -15,6 +15,8 @@ class My_Yammer():
     def __init__(self, access_token):
 
 
+        if access_token == None:
+            print("DEBUG toke is None in My_Yammer init")
         self.my_crawler = my_crawler.My_Crawler(access_token)
 
         #if db is postgres

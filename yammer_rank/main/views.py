@@ -13,6 +13,7 @@ from flask import session
 from datetime import datetime
 import time
 import os
+import yampy
 
 from . import main
 from .. import my_yammer
@@ -29,66 +30,52 @@ def index():
     how to add token to a session?
     index -> (login) -> yammer_rank -> rank_result
     '''
-    return render_template('index.html')
+    return render_template('main/index.html')
 
 
 def oauth_login():
     access_token = None
-    if my_constants.ACCESS_TOKEN == None:
-        #need to login via oauth
-        print("DEBUG ACCESS_TOKEN == NONE, need to login.")
-        pass
-    else:
-        #Add token into the session
-        print("DEBUG ACCESS_TOKEN is existed.")
-        pass
+    authenticator = yampy.Authenticator(client_id=my_constants.CLIENT_ID, client_secret=my_constants.CLIENT_SECRET)
+    redirect_uri = my_constants.REDIRECT_URL
+    auth_url = authenticator.authorization_url(redirect_uri=redirect_uri)
 
-    ya = my_yammer.My_Yammer(my_constants.ACCESS_TOKEN)
-    groups = ya.get_current_groups()
-    #print("DEBUG groups: {}".format(groups))
-    #return auth_url
+    #how to get the code?
+    code = None
+    access_token = authenticator.fetch_access_token(code)
 
     return access_token
 
 
-@main.route('/yammer_rank', methods=["POST"])
+@main.route('/yammer_rank', methods=["POST", "GET"])
 def yammer_rank():
     '''
     Input param to show rankings
     '''
-    access_token = None
-    if not my_constants.ACCESS_TOKEN:
-        print("DEBUG, no ACCESS_TOKEN existed in my_constantst, login via Oauth start..")
-        if not session.get("user_id"):
-            #login via oauth
-            #ACCESS_TOKEN =
-            access_token = None
-            if not access_token:
-                print("Get access_token failed")
-            pass
-    else:
-        access_token = my_constants.Access_TOKEN
-        print("DEBUG Your ACCESS_TOKEN is: {}".format(access_token))
+    print("DEBUGGGGGGGG request.url: {}".format(request.url))
+    print("DEBUGGGGGGGG request.method: {}".format(request.method))
 
-    if access_token == None:
+    if session["access_token"] == None:
         #No valid token, request return error login
         print("Invalid login")
         return ("login failed")
-        pass
 
+
+    access_token = session["access_token"]
+    if not access_token:
+        print("invalid token")
+        return ("Invalid token: {}".format(access_token))
+    else:
+        print("DEBUG yammer_rank get the toke: {}".format(access_token))
     ya = my_yammer.My_Yammer(access_token)
     user_name, user_id = ya.get_current_user()
 
     session["user_name"] = user_name
     session["user_id"] = user_id
-    session["access_token"] = access_token
+    #session["access_token"] = access_token
     session.permanent = True
     #return auth_url
 
-
-    print("DEBUG you click the login button")
-    #return render_template("yammer_rank.html", user_name=user_name, groups=groups)
-    return render_template("yammer_rank.html", user_name=user_name)
+    return render_template("main/yammer_rank.html", user_name=user_name)
 
 
 #return the rank page!
@@ -105,6 +92,10 @@ def get_rank_result():
     rank_for_post = False
     #The final rankings
     yammer_result = None
+    access_token = session["access_token"]
+    if not access_token:
+        print("login expired, need to login first")
+        return "Login needed"
 
     if request.method == 'POST':
         # yammer_result = ["a", "b", "c"]
@@ -159,7 +150,7 @@ def get_rank_result():
 
     # group_id = 15273590
     # group_id = 12562314
-    ya = my_yammer.My_Yammer(my_constants.ACCESS_TOKEN)
+    ya = my_yammer.My_Yammer(access_token)
     group_name = ya.pull_group_name(group_id)
     if group_name == None:
         #wrong group id
@@ -201,7 +192,7 @@ def get_rank_result():
     if rank_for_post:
         rank_category = "Post"
 
-    return render_template('rank_result.html', mylist=yammer_result, my_data=data, rank_category=rank_category)
+    return render_template('main/rank_result.html', mylist=yammer_result, my_data=data, rank_category=rank_category)
 
 
 if __name__ == '__main__':

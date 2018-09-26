@@ -8,6 +8,11 @@ class Config:
     FLASKY_MAIL_SUBJECT_PREFIX = '[yammer_rank]'
     FLASKY_MAIL_SENDER = 'fancyzzy2017@gmail.com'
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
+    CLIENT_ID = os.environ.get("CLIENT_ID")
+    CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
+    REDIRECT_URL = os.environ.get("REDIRECT_URL")
+    AUTH_URL = "https://www.yammer.com/oauth2/authorize?client_id="\
+               + CLIENT_ID + "&response_type=code&redirect_uri=" + REDIRECT_URL
 
     @staticmethod
     def init_app(app):
@@ -37,7 +42,7 @@ class Heroku(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
-config = {
+my_config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
     'production': ProductionConfig,
