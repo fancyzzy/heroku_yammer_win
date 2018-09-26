@@ -30,7 +30,12 @@ def index():
     how to add token to a session?
     index -> (login) -> yammer_rank -> rank_result
     '''
-    return render_template('main/index.html')
+    if "access_token" in session:
+        print("DEBUG already has the token")
+        return render_template('main/yammer_rank.html')
+        print("DEBUG initally, no token")
+    else:
+        return render_template('main/index.html')
 
 
 @main.route('/yammer_rank', methods=["POST", "GET"])

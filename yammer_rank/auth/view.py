@@ -21,12 +21,12 @@ def oauth_login():
 
     print("DEBUG this is oauth_login")
     if "access_token" not in session:
-        return yammer_rank_oauth.authorize(callback=url_for('/', _external=True))
+        return yammer_rank_oauth.authorize(callback=url_for('main.index', _external=True))
     else:
         return redirect(url_for('main.yammer_rank'))
 
 
-@auth_bp.route('/')
+@auth_bp.route('/authorized')
 def authorized():
     print("DEBUG this is authorized function!!!!!!!!!!!!!!")
     resp = yammer_rank_oauth.authorized_response()
