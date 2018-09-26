@@ -33,19 +33,6 @@ def index():
     return render_template('main/index.html')
 
 
-def oauth_login():
-    access_token = None
-    authenticator = yampy.Authenticator(client_id=my_constants.CLIENT_ID, client_secret=my_constants.CLIENT_SECRET)
-    redirect_uri = my_constants.REDIRECT_URL
-    auth_url = authenticator.authorization_url(redirect_uri=redirect_uri)
-
-    #how to get the code?
-    code = None
-    access_token = authenticator.fetch_access_token(code)
-
-    return access_token
-
-
 @main.route('/yammer_rank', methods=["POST", "GET"])
 def yammer_rank():
     '''

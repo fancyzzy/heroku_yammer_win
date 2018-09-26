@@ -16,7 +16,7 @@ github = oauth.remote_app(
     request_token_url=None,
     access_token_method='POST',
     access_token_url='https://www.yammer.com/oauth2/access_token',
-    authorize_url='https://www.yammer.com/oauth2/authorize'
+    authorize_url='https://www.yammer.com/oauth2/authorize?client_id=b41BFW3YX3b3644ugrX51A&response_type=code&redirect_uri=https://yammerrank.herokuapp.com'
 )
 
 

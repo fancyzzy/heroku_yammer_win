@@ -9,10 +9,10 @@ yammer_rank_oauth = oauth.remote_app(
     'Yammer Rank',
     consumer_key=my_constants.CLIENT_ID,
     consumer_secret=my_constants.CLIENT_SECRET,
-    base_url='https://api.yammer.com',
+    base_url='https://www.yammer.com/api/v1',
     request_token_url=None,
     request_token_params={'scope': 'get_user_info'},
-    access_token_url='/oauth2.0/token',
+    access_token_url='https://www.yammer.com/oauth2/access_token',
     authorize_url= my_constants.AUTH_URL
 )
 
@@ -21,13 +21,14 @@ def oauth_login():
 
     print("DEBUG this is oauth_login")
     if "access_token" not in session:
-        return yammer_rank_oauth.authorize(callback=url_for('auth.authorized', _external=False))
+        return yammer_rank_oauth.authorize(callback='https://yammerrank.herokuapp.com/yammer_rank')
     else:
         return redirect(url_for('main.yammer_rank'))
 
 
 @auth_bp.route('/authorized')
 def authorized():
+    print("DEBUG this is authorized function")
     resp = yammer_rank_oauth.authorized_response()
     if resp is None:
         return 'Access denied: reason=%s error=%s' %\
@@ -36,6 +37,7 @@ def authorized():
     access_token = (resp['access_token'], '')
     print("DEBUG access_token got: ".format(access_token))
     session['access_token'] = access_token
+    print("DEBUG token has been sessioned!")
 
     # Get openid via access_token, openid and access_token are needed for API calls
     #resp = qq.get('/oauth2.0/me', {'access_token': session['qq_token'][0]})
