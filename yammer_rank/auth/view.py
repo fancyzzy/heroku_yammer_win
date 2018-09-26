@@ -21,7 +21,7 @@ def oauth_login():
 
     print("DEBUG this is oauth_login")
     if "access_token" not in session:
-        return yammer_rank_oauth.authorize(callback='https://yammerrank.herokuapp.com/yammer_rank')
+        return yammer_rank_oauth.authorize(callback=url_for('authorized', _external=True))
     else:
         return redirect(url_for('main.yammer_rank'))
 
