@@ -30,6 +30,9 @@ def index():
     how to add token to a session?
     index -> (login) -> yammer_rank -> rank_result
     '''
+    code = request.args.get("code")
+    print("DEBUG code: {}".format(code))
+
     if "access_token" in session:
         print("DEBUG already has the token")
         return render_template('main/yammer_rank.html')
@@ -45,6 +48,9 @@ def yammer_rank():
     '''
     print("DEBUGGGGGGGG request.url: {}".format(request.url))
     print("DEBUGGGGGGGG request.method: {}".format(request.method))
+
+    code = request.args.get("code")
+    print("DEBUG code: {}".format(code))
 
     if session["access_token"] == None:
         #No valid token, request return error login
