@@ -15,6 +15,7 @@ from datetime import datetime
 import time
 import os
 import yampy
+import json
 
 from . import main
 from .. import my_yammer
@@ -44,8 +45,16 @@ def index():
         print("DEBUG this is main.index authorized function!!!!!!!!!!!!!!")
         print("DEBUG resp is not NONE!")
         print("DEBUG resp: {}, type(resp): {}".format(resp, type(resp)))
-        access_token = resp["access_token"]["token"]
-        #access_token = (resp['access_token'], '')
+        #The key in resp is a dict contain access_token
+        l_k = []
+        for k in resp.keys():
+            l_k.append(k)
+
+        d_resp = json.loads(l_k[0])
+
+        access_token = d_resp["access_token"]["token"]
+        print("DEBUG access_token got: {}".format(access_token))
+
         '''
         # how to get the code?
         authenticator = yampy.Authenticator(client_id=my_constants.CLIENT_ID, client_secret=my_constants.CLIENT_SECRET)
@@ -56,7 +65,7 @@ def index():
         print("DEBUG code: {}".format(code))
         access_token = authenticator.fetch_access_token(code)
         '''
-        print("DEBUG access_token got: {}".format(access_token))
+
         if access_token == None:
             return "Login failed via oauth"
 
