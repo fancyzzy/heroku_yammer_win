@@ -41,7 +41,7 @@ def index():
     resp = yammer_rank_oauth.authorized_response()
 
     if resp is not None:
-        print("DEBUG this is authorized function!!!!!!!!!!!!!!")
+        print("DEBUG this is main.index authorized function!!!!!!!!!!!!!!")
         print("DEBUG resp is not NONE!")
         print("DEBUG resp: {}".format(resp))
         # how to get the code?
@@ -50,6 +50,7 @@ def index():
         #auth_url = authenticator.authorization_url(redirect_uri=redirect_uri)
         code = None
         code = request.args.get("code")
+        print("DEBUG code: {}".format(code))
         access_token = authenticator.fetch_access_token(code)
 
         #access_token = (resp['access_token'], '')
@@ -59,11 +60,9 @@ def index():
 
         session['access_token'] = access_token
         print("DEBUG token has been sessioned!")
-
-    if "access_token" in session:
-        print("DEBUG already has the token")
         return render_template('main/yammer_rank.html')
 
+    print("DEBUG show index page since you need to click start to login")
     return render_template('main/index.html')
 
 
