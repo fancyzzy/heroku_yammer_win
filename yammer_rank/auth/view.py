@@ -15,11 +15,10 @@ def oauth_login():
     #return yammer_rank_oauth.authorize(callback=my_constants.REDIRECT_URL)
 
 
-'''
 #Yammer api doesn't allow /callback
 #see https://developer.yammer.com/docs/authentication-1
 
-@auth_bp.route('/authorized')
+@auth_bp.route('/')
 def authorized():
     print("DEBUG this is authorized function!!!!!!!!!!!!!!")
     resp = yammer_rank_oauth.authorized_response()
@@ -41,4 +40,3 @@ def authorized():
         return "Login failed via oauth"
     else:
         return redirect(url_for('main.yammer_rank'))
-'''
