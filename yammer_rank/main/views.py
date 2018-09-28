@@ -43,7 +43,10 @@ def index():
     if resp is not None:
         print("DEBUG this is main.index authorized function!!!!!!!!!!!!!!")
         print("DEBUG resp is not NONE!")
-        print("DEBUG resp: {}".format(resp))
+        print("DEBUG resp: {}, type(resp): {}".format(resp, type(resp)))
+        access_token = resp["access_token"]["token"]
+        #access_token = (resp['access_token'], '')
+        '''
         # how to get the code?
         authenticator = yampy.Authenticator(client_id=my_constants.CLIENT_ID, client_secret=my_constants.CLIENT_SECRET)
         #redirect_uri = my_constants.REDIRECT_URL
@@ -52,8 +55,7 @@ def index():
         code = request.args.get("code")
         print("DEBUG code: {}".format(code))
         access_token = authenticator.fetch_access_token(code)
-
-        #access_token = (resp['access_token'], '')
+        '''
         print("DEBUG access_token got: {}".format(access_token))
         if access_token == None:
             return "Login failed via oauth"
