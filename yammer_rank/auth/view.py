@@ -11,8 +11,8 @@ from .. import my_constants
 def oauth_login():
 
     print("DEBUG this is oauth_login")
-    #return yammer_rank_oauth.authorize(callback=url_for('main.index', _external=True))
-    return yammer_rank_oauth.authorize(callback=my_constants.REDIRECT_URL)
+    return yammer_rank_oauth.authorize(callback=url_for('main.index', _external=True))
+    #return yammer_rank_oauth.authorize(callback=my_constants.REDIRECT_URL)
 
 
 #Yammer api doesn't allow /callback

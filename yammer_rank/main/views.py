@@ -54,7 +54,7 @@ def index():
         access_token = authenticator.fetch_access_token(code)
 
         #access_token = (resp['access_token'], '')
-        print("DEBUG access_token got: ".format(access_token))
+        print("DEBUG access_token got: {}".format(access_token))
         if access_token == None:
             return "Login failed via oauth"
 

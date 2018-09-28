@@ -36,14 +36,15 @@ def internal_server_error(e):
         print("DEBUG resp: {}".format(resp))
         # how to get the code?
         authenticator = yampy.Authenticator(client_id=my_constants.CLIENT_ID, client_secret=my_constants.CLIENT_SECRET)
-        # redirect_uri = my_constants.REDIRECT_URL
-        # auth_url = authenticator.authorization_url(redirect_uri=redirect_uri)
+        redirect_uri = my_constants.REDIRECT_URL
+        auth_url = authenticator.authorization_url(redirect_uri=redirect_uri)
+        print("DEBUG auth_url: {}".format(auth_url))
         code = None
         code = request.args.get("code")
-        print("DEBUG code: {}".format(code))
+        print("DEBUG code: {}, type(code): {}".format(code, type(code)))
         access_token = authenticator.fetch_access_token(code)
 
         # access_token = (resp['access_token'], '')
-        print("DEBUG access_token got: ".format(access_token))
+        print("DEBUG access_token got: {}".format(access_token))
 
     return 'auth_bp, 500.html',500
