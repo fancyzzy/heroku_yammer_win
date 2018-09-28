@@ -11,7 +11,8 @@ yammer_rank_oauth = oauth.remote_app(
     consumer_secret=my_constants.CLIENT_SECRET,
     base_url='https://www.yammer.com/api/v1',
     request_token_url=None,
-    request_token_params={'scope': 'get_user_info'},
+    #request_token_params={'scope': 'get_user_info'},
+    request_token_params=None,
     access_token_url='https://www.yammer.com/oauth2/access_token',
     authorize_url= my_constants.AUTH_URL
 )
