@@ -8,3 +8,5 @@ yammer_crawler/__pycache__/constants.cpython-36.pyc
 yammer_crawler/data/group_12562314_messages.json
 yammer_crawler/data/*
 yammer_crawler/data
+/.venv
+/.env

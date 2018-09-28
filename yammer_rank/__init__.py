@@ -1,8 +1,20 @@
 from flask import Flask
 from config import my_config
 from flask_oauthlib.client import OAuth
+from . import my_constants
+
 
 oauth = OAuth()
+yammer_rank_oauth = oauth.remote_app(
+    'Yammer Rank',
+    consumer_key=my_constants.CLIENT_ID,
+    consumer_secret=my_constants.CLIENT_SECRET,
+    base_url='https://www.yammer.com/api/v1',
+    request_token_url=None,
+    request_token_params={'scope': 'get_user_info'},
+    access_token_url='https://www.yammer.com/oauth2/access_token',
+    authorize_url= my_constants.AUTH_URL
+)
 
 #print("yammer_rank/__init__.py, config: {}".format(config))
 

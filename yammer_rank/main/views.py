@@ -9,6 +9,7 @@ from flask import Flask
 from flask import request
 from flask import render_template
 from flask import session
+from flask import redirect, url_for
 
 from datetime import datetime
 import time
@@ -19,6 +20,7 @@ from . import main
 from .. import my_yammer
 from .. import my_plot
 from .. import my_constants
+from yammer_rank import yammer_rank_oauth
 
 #app = Flask(__name__)
 #app.config['SECRET_KEY'] = os.urandom(24)
@@ -30,15 +32,39 @@ def index():
     how to add token to a session?
     index -> (login) -> yammer_rank -> rank_result
     '''
-    code = request.args.get("code")
-    print("DEBUG code: {}".format(code))
 
     if "access_token" in session:
         print("DEBUG already has the token")
         return render_template('main/yammer_rank.html')
-        print("DEBUG initally, no token")
-    else:
-        return render_template('main/index.html')
+
+    #response from oauth_login callback
+    resp = yammer_rank_oauth.authorized_response()
+
+    if resp is not None:
+        print("DEBUG this is authorized function!!!!!!!!!!!!!!")
+        print("DEBUG resp is not NONE!")
+        print("DEBUG resp: {}".format(resp))
+        # how to get the code?
+        authenticator = yampy.Authenticator(client_id=my_constants.CLIENT_ID, client_secret=my_constants.CLIENT_SECRET)
+        #redirect_uri = my_constants.REDIRECT_URL
+        #auth_url = authenticator.authorization_url(redirect_uri=redirect_uri)
+        code = None
+        code = request.args.get("code")
+        access_token = authenticator.fetch_access_token(code)
+
+        #access_token = (resp['access_token'], '')
+        print("DEBUG access_token got: ".format(access_token))
+        if access_token == None:
+            return "Login failed via oauth"
+
+        session['access_token'] = access_token
+        print("DEBUG token has been sessioned!")
+
+    if "access_token" in session:
+        print("DEBUG already has the token")
+        return render_template('main/yammer_rank.html')
+
+    return render_template('main/index.html')
 
 
 @main.route('/yammer_rank', methods=["POST", "GET"])
