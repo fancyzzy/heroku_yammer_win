@@ -82,6 +82,7 @@ def yammer_rank():
     '''
     Input param to show rankings
     '''
+    print("DEBUG this is yammer_rank()")
     print("DEBUGGGGGGGG request.url: {}".format(request.url))
     print("DEBUGGGGGGGG request.method: {}".format(request.method))
 
@@ -108,6 +109,7 @@ def yammer_rank():
     #session["access_token"] = access_token
     session.permanent = True
     #return auth_url
+    print("DEBUG show yammer_rank.html with user_name")
 
     return render_template("main/yammer_rank.html", user_name=user_name)
 

@@ -10,6 +10,15 @@ from .. import my_constants
 @auth_bp.route('/oauth_login')
 def oauth_login():
 
+    #local test mode
+    #never set ACCESS_TOKEN in a production environment
+    if my_constants.ACCESS_TOKEN:
+        access_token = my_constants.ACCESS_TOKEN
+        print("DEBUG local envrionmeent has the TOKEN: {}".format(access_token))
+        session["access_token"] = access_token
+        return render_template('main/yammer_rank.html')
+
+
     print("DEBUG this is oauth_login")
     #return yammer_rank_oauth.authorize(callback=url_for('main.index', _external=True))
     return yammer_rank_oauth.authorize(callback=my_constants.REDIRECT_URL)
