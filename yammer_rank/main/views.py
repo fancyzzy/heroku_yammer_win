@@ -34,11 +34,29 @@ def index():
     index -> (login) -> yammer_rank -> rank_result
     '''
 
+    print("DEBUG this is / index function")
     if "access_token" in session:
         print("DEBUG already has the token")
-        return render_template('main/yammer_rank.html')
+        if not "user_name" in session:
+            print("but no user_name")
+            session["user_name"] = "local test"
+        return redirect(url_for('main.yammer_rank'))
+
+    elif my_constants.ACCESS_TOKEN:
+        #local test mode
+        #never set ACCESS_TOKEN in a production environment
+        access_token = my_constants.ACCESS_TOKEN
+        print("DEBUG local test envrionmeent has the TOKEN: {}".format(access_token))
+        session["access_token"] = access_token
+        session["user_name"] = "local test"
+        print("DEBUG set user name local test")
+        return render_template('main/yammer_rank.html', user_name="local test")
+    else:
+        return "No token in session"
 
     #response from oauth_login callback
+    #Yammer api doesn't allow /callback
+    #see https://developer.yammer.com/docs/authentication-1
     resp = yammer_rank_oauth.authorized_response()
 
     if resp is not None:
@@ -51,27 +69,20 @@ def index():
             l_k.append(k)
 
         d_resp = json.loads(l_k[0])
-
         access_token = d_resp["access_token"]["token"]
         print("DEBUG access_token got: {}".format(access_token))
-
-        '''
-        # how to get the code?
-        authenticator = yampy.Authenticator(client_id=my_constants.CLIENT_ID, client_secret=my_constants.CLIENT_SECRET)
-        #redirect_uri = my_constants.REDIRECT_URL
-        #auth_url = authenticator.authorization_url(redirect_uri=redirect_uri)
-        code = None
-        code = request.args.get("code")
-        print("DEBUG code: {}".format(code))
-        access_token = authenticator.fetch_access_token(code)
-        '''
-
         if access_token == None:
             return "Login failed via oauth"
 
-        session['access_token'] = access_token
+        user_name = d_resp["user"]["full_name"]
+        user_name = user_name.split(",")[0] + " " + user_name.split(",")[1].split()[0]
+        user_id = d_resp["user"]["id"]
+        session["user_name"] = user_name
+        session["id"] = user_id
+        session["access_token"] = access_token
+        session.permanent = True
         print("DEBUG token has been sessioned!")
-        return render_template('main/yammer_rank.html')
+        return redirect(url_for('main.yammer_rank'))
 
     print("DEBUG show index page since you need to click start to login")
     return render_template('main/index.html')
@@ -83,33 +94,19 @@ def yammer_rank():
     Input param to show rankings
     '''
     print("DEBUG this is yammer_rank()")
-    print("DEBUGGGGGGGG request.url: {}".format(request.url))
-    print("DEBUGGGGGGGG request.method: {}".format(request.method))
-
-    code = request.args.get("code")
-    print("DEBUG code: {}".format(code))
-
-    if session["access_token"] == None:
-        #No valid token, request return error login
-        print("Invalid login")
-        return ("login failed")
-
+    #print("DEBUGGGGGGGG request.url: {}".format(request.url))
+    #print("DEBUGGGGGGGG request.method: {}".format(request.method))
+    #code = request.args.get("code")
+    #print("DEBUG code: {}".format(code))
 
     access_token = session["access_token"]
     if not access_token:
-        print("invalid token")
+        print("DEBUG invalid token")
         return ("Invalid token: {}".format(access_token))
     else:
         print("DEBUG yammer_rank get the toke: {}".format(access_token))
-    ya = my_yammer.My_Yammer(access_token)
-    user_name, user_id = ya.get_current_user()
 
-    session["user_name"] = user_name
-    session["user_id"] = user_id
-    #session["access_token"] = access_token
-    session.permanent = True
-    #return auth_url
-    print("DEBUG show yammer_rank.html with user_name")
+    user_name = session["user_name"]
 
     return render_template("main/yammer_rank.html", user_name=user_name)
 
