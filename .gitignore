@@ -10,3 +10,4 @@ yammer_crawler/data/*
 yammer_crawler/data
 /.venv
 /.env
+.DS_Store
