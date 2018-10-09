@@ -14,7 +14,7 @@ flask-bootstrap = "*"
 waitress = "*"
 gunicorn = "*"
 flask-oauthlib = "*"
-celery = "*"
+celery = {version = "*", extras = ["redis"]}
 
 [dev-packages]
 

@@ -23,8 +23,20 @@ from .. import my_plot
 from .. import my_constants
 from yammer_rank import yammer_rank_oauth
 
+from yammer_rank import my_celery
+
 #app = Flask(__name__)
 #app.config['SECRET_KEY'] = os.urandom(24)
+
+
+@my_celery.task
+def long_time_task(ya, group_id, letter_num, least_comment_num, end_date, start_date, rank_for_post):
+    print("DEBUG this is Celery function!!!!!!!")
+    result = ya.get_group_rank(group_id, letter_num, least_comment_num, \
+                                      end_date, start_date, rank_for_post)
+    print("DEBUG celery function finished!!!!")
+    return result
+
 
 @main.route('/')
 def index():
@@ -194,9 +206,11 @@ def get_rank_result():
         #if new user, refresh the db user info
         #pass
 
-        yammer_result = ya.get_group_rank(group_id, letter_num, least_comment_num, \
-                                          end_date, start_date, rank_for_post)
-
+        # yammer_result = ya.get_group_rank(group_id, letter_num, least_comment_num, \
+        #                                   end_date, start_date, rank_for_post)
+        #use celery
+        yammer_result = long_time_task.delay(ya, group_id, letter_num, least_comment_num, \
+                                       end_date, start_date, rank_for_post)
 
     if yammer_result == None:
         print("DEBUG None message data, perhaps wrong group id!")

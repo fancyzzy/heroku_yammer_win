@@ -14,6 +14,10 @@ class Config:
     AUTH_URL = "https://www.yammer.com/oauth2/authorize?client_id="\
                + CLIENT_ID + "&response_type=code&redirect_uri=" + REDIRECT_URL
 
+
+    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
     @staticmethod
     def init_app(app):
         pass

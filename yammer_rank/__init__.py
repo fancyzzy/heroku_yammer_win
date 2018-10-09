@@ -1,7 +1,10 @@
 from flask import Flask
 from config import my_config
+from config import Config
 from flask_oauthlib.client import OAuth
 from . import my_constants
+
+from celery import Celery
 
 
 oauth = OAuth()
@@ -17,12 +20,16 @@ yammer_rank_oauth = oauth.remote_app(
     #authorize_url= my_constants.AUTH_URL
 )
 
-#print("yammer_rank/__init__.py, config: {}".format(config))
+#celery
+my_celery = Celery(__name__, broker=Config.CELERY_BROKER_URL)
 
 def create_app(config_name):
     app = Flask(__name__)
+    #print("DEBUG __name__ :{}".format(__name__))
     print("DEBUG Flask app created at yammer_rank/__init__.py,  __name__: {}".format(__name__))
+    #print("DEBUG app.name: {}".format(app.name))
     app.config.from_object(my_config[config_name])
+
     my_config[config_name].init_app(app)
 
     from .main import main as main_blueprint
@@ -33,6 +40,8 @@ def create_app(config_name):
 
     #oauth authentication
     oauth.init_app(app)
+
+    my_celery.conf.update(app.config)
 
 
     return app
