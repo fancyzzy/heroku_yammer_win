@@ -12,8 +12,9 @@
 <h4>Select group, end date and start date to get the rank result</h4>
 <form method="post" action="/rank_result">
     <br>
-    group id
-    <input type="text" id="id_sel_group" name="sel_group" placeholder="Enter group id" oninput="value=value.replace(/[^\d]/g,'')"/>
+    group id*
+    <input type="text" id="id_sel_group" name="sel_group" placeholder="Enter group id" oninput="value=value.replace(/[^\d]/g,'')"
+    required="required"/>
     <!--<select name="sel_group" id="id_sel_group">
         {% for group in groups %}
             <option value = {{ group[1] }}> {{ group[0] }}</option>
@@ -43,7 +44,7 @@
         <option value = 1> True</option>
     </select>
     <br><br>
-    <input type="submit" value="Get Yammer Rank" name="get_rank"/>
+    <input type="submit" value="Get Yammer Rank" name="get_rank" />
 </form>
 <br><br>
 <!--
@@ -65,6 +66,7 @@
         document.getElementById("id_final_comment_num").value=100
         document.getElementById("id_show_top").value=10
     };
+
 </script>
 
 </body>

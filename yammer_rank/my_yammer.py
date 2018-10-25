@@ -238,8 +238,8 @@ class My_Yammer():
         :param group_id:
         :param letter_num: letter number of a message content
         :param least_comment_num: number of messages sent
-        :param end_date:   liek '2018/08/07'
-        :param start_date: '2018/02/01'
+        :param end_date:   like '2018/08/07' latest date
+        :param start_date: '2018/02/01' back to oldest date
         :return: ranked_list: [[id, name, comment, post],...], total comments, total posts
         '''
         print("DEBUG Start show group rank with at least letter_num: {}, least_comment_num: {}, from date: {} to {}".\
@@ -291,6 +291,7 @@ class My_Yammer():
 
         #[[id, comments, post], ...]
         result_list = [[x,d_users[x][0],d_users[x][1]] for x in d_users.keys() if d_users[x][0] >= least_comment_num]
+        print("DEBUG raw result_list: {}".format(result_list))
 
         if is_sorted_for_post:
             #for post
