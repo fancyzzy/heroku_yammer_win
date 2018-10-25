@@ -290,7 +290,10 @@ class My_Yammer():
                     n += 1
 
         #[[id, comments, post], ...]
-        result_list = [[x,d_users[x][0],d_users[x][1]] for x in d_users.keys() if d_users[x][0] >= least_comment_num]
+        if is_sorted_for_post:
+            result_list = [[x,d_users[x][0],d_users[x][1]] for x in d_users.keys()]
+        else:
+            result_list = [[x,d_users[x][0],d_users[x][1]] for x in d_users.keys() if d_users[x][0] >= least_comment_num]
         print("DEBUG raw result_list: {}".format(result_list))
 
         if is_sorted_for_post:
@@ -356,7 +359,8 @@ class My_Yammer():
         group_name = self.get_group_name(group_id)
         print("DEBUG In the group '{}',".format(group_name))
         print("DEBUG Totally {} comments and  {} posts from date {} back to {}".format(n, n_post, end_date, start_date))
-        print("DEBUG Where {} people sent at least {} comments".format(len(result_list), least_comment_num))
+        if not is_sorted_for_post:
+            print("DEBUG Where {} people sent at least {} comments".format(len(result_list), least_comment_num))
         if unknown_num > 0:
             print("DEBUG %d unknown user."%(unknown_num))
 
