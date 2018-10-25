@@ -23,12 +23,14 @@ from .. import my_plot
 from .. import my_constants
 from yammer_rank import yammer_rank_oauth
 
-from yammer_rank import my_celery
+# Use Celery
+#from yammer_rank import my_celery
 
 #app = Flask(__name__)
 #app.config['SECRET_KEY'] = os.urandom(24)
 
 
+'''
 @my_celery.task
 def long_time_task(ya, group_id, letter_num, least_comment_num, end_date, start_date, rank_for_post):
     print("DEBUG this is Celery function!!!!!!!")
@@ -36,6 +38,7 @@ def long_time_task(ya, group_id, letter_num, least_comment_num, end_date, start_
                                       end_date, start_date, rank_for_post)
     print("DEBUG celery function finished!!!!")
     return result
+'''
 
 
 @main.route('/')
@@ -137,6 +140,8 @@ def get_rank_result():
     rank_for_post = False
     #The final rankings
     yammer_result = None
+    total_comments = 0
+    total_posts = 0
     access_token = session["access_token"]
     if not access_token:
         print("login expired, need to login first")
@@ -193,6 +198,10 @@ def get_rank_result():
         final_comment_num = 50
         show_top = 10
 
+    # Get the group messages and users
+    # if there is in db, then direct get data from db
+    # if there is not fresh data in db, then start the crawler
+
     # group_id = 15273590
     # group_id = 12562314
     ya = my_yammer.My_Yammer(access_token)
@@ -206,11 +215,15 @@ def get_rank_result():
         #if new user, refresh the db user info
         #pass
 
-        # yammer_result = ya.get_group_rank(group_id, letter_num, least_comment_num, \
-        #                                   end_date, start_date, rank_for_post)
-        #use celery
+        if yammer_result == None:
+            yammer_result, total_comments, total_posts = ya.get_group_rank(group_id, letter_num, least_comment_num, \
+                                               end_date, start_date, rank_for_post)
+        # use celery
+        '''
+        print("DEBUG Start to call the long_time_task va celery")
         yammer_result = long_time_task.delay(ya, group_id, letter_num, least_comment_num, \
                                        end_date, start_date, rank_for_post)
+        '''
 
     if yammer_result == None:
         print("DEBUG None message data, perhaps wrong group id!")
@@ -220,7 +233,8 @@ def get_rank_result():
     # 转成图片的步骤
     # tkinter RuntimeError: main thread is not in main loop
     # here need another thread?
-    plt = my_plot.draw_figure(yammer_result, 0, end_date, start_date, final_comment_num, show_top, group_name)
+    plt = my_plot.draw_figure(yammer_result, 0, end_date, start_date, final_comment_num, show_top, group_name, \
+                              total_comments, total_posts)
     print("DEBUG Get plt id: {}".format(id(plt)))
 
     if start_date == None:
@@ -233,13 +247,13 @@ def get_rank_result():
 
     sio = BytesIO()
     plt.savefig(sio, format='png', dpi=100)
-    data = base64.b64encode(sio.getvalue()).decode()
+    img_data = base64.b64encode(sio.getvalue()).decode()
     # plt.close()
     rank_category = "Comment"
     if rank_for_post:
         rank_category = "Post"
 
-    return render_template('main/rank_result.html', mylist=yammer_result, my_data=data, rank_category=rank_category)
+    return render_template('main/rank_result.html', mylist=yammer_result, img_data=img_data, rank_category=rank_category)
 
 
 if __name__ == '__main__':

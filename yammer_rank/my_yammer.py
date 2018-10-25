@@ -240,7 +240,7 @@ class My_Yammer():
         :param least_comment_num: number of messages sent
         :param end_date:   liek '2018/08/07'
         :param start_date: '2018/02/01'
-        :return: ranked_list: [[id, name, comment, post],...]
+        :return: ranked_list: [[id, name, comment, post],...], total comments, total posts
         '''
         print("DEBUG Start show group rank with at least letter_num: {}, least_comment_num: {}, from date: {} to {}".\
               format(letter_num, least_comment_num, end_date, start_date))
@@ -361,7 +361,7 @@ class My_Yammer():
 
         #rank_field = ["Id", "Full_Name", "Updats", "Posts", "Photo"]
 
-        return ranked_list
+        return ranked_list,n, n_post
     #############get_group_rank()##################################################
 
 

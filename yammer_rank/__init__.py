@@ -21,7 +21,11 @@ yammer_rank_oauth = oauth.remote_app(
 )
 
 #celery
-my_celery = Celery(__name__, broker=Config.CELERY_BROKER_URL)
+'''
+my_celery = Celery(__name__,
+                   broker=Config.CELERY_BROKER_URL,
+                   backend=Config.CELERY_RESULT_BACKEND)
+'''
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -41,7 +45,7 @@ def create_app(config_name):
     #oauth authentication
     oauth.init_app(app)
 
-    my_celery.conf.update(app.config)
+    #my_celery.conf.update(app.config)
 
 
     return app
