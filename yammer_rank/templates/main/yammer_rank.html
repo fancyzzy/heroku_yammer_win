@@ -77,8 +77,11 @@
                     $('#success_alert').hide();
                 }
                 else {
-                    //$("#id_img_data").attr("src","data:image/png;base64,"+data.img_data)
+                    // img
                     $('#id_img_data').html('<img src="data:image/png;base64,' + data.img_data + '" />');
+
+
+
                     $('#success_alert').text("You chose group: " + data.group_id + " with "+data.letter_num).show()
                     $('#error_alert').hide();
                     alert("You chose group: " + data.group_id +"\n" + "result is: " + data.yammer_result)
@@ -99,4 +102,4 @@
 </script>
 
 </body>
-</html>/html>
+</html>
