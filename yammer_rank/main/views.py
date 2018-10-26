@@ -258,10 +258,10 @@ def get_rank_result():
     return render_template('main/rank_result.html', mylist=yammer_result, img_data=img_data, rank_category=rank_category)
 
 
-# celery
-@main.route('/long_task', methods=['POST'])
-def long_task():
-    print("DEBUG this is long_task called from  ajax!!!!")
+# ajax
+@main.route('/process_ajax', methods=['POST'])
+def process_ajax():
+    print("DEBUG this is process_ajax called from  ajax!!!!")
     end_date = None
     start_date = None
     letter_num = 1
@@ -378,12 +378,14 @@ def long_task():
     sio = BytesIO()
     plt.savefig(sio, format='png', dpi=100)
     img_data = base64.b64encode(sio.getvalue()).decode()
+    print("DEBUG img_data: {}, isinstance(img_data, bytes): {}".format(img_data[:10], isinstance(img_data, bytes)))
     # plt.close()
     rank_category = "Comment"
     if rank_for_post:
         rank_category = "Post"
 
-    response = {'yammer_result':yammer_result, 'img_data':img_data}
+    response = {'group_id':group_id, 'yammer_result':yammer_result, 'img_data':img_data}
+    print("DEBUG process_jax finished!!!!!!!!!!!")
 
     return jsonify(response), 200
 
