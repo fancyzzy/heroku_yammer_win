@@ -457,7 +457,7 @@ if __name__ == '__main__':
     ranked_list = my_yammer.get_group_rank(group_id, letter_num=0, least_comment_num=1, end_date=str_now, \
                                            start_date=None, is_sorted_for_post=True)
 
-    #my_yammer.export_users_details_to_excel(group_id)
+    my_yammer.export_users_details_to_excel(group_id)
     if ranked_list != None:
         for item in ranked_list:
             print(item)

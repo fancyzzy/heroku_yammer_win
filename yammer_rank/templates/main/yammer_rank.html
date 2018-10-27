@@ -45,23 +45,22 @@
     <br><br>
     <input type="submit" id="id_get_rank" value="Get Yammer Rank" name="get_rank" />
 
-    <p>form 内如果您点击我，下面会追加文本。</p>
 </form>
 <br><br>
 
-
-<hr>
-<!--img id="id_data_img" src="data:image/png;base64,{{ img_data }} "-->
-<div id="id_img_data">图</div>
-<br/>
-<div id="id_rank_list" name="rank_list">这里是列表</div>
-<br/>
 <div id="success_alert"></div>
 <div id="error_alert"></div>
 
+<hr>
+<!--img id="id_data_img" src="data:image/png;base64,{{ img_data }} "-->
+<div id="id_img_data">Rank Image</div>
+<br/>
+<div id="id_rank_list" name="rank_list">Rank List</div>
+<br/>
 
 <script>
     $(document).ready(function() {
+
         $('form').on('submit', function(event) {
             $('#id_get_rank').attr({"disabled":"true"});
 
@@ -80,9 +79,25 @@
                     // img
                     $('#id_img_data').html('<img src="data:image/png;base64,' + data.img_data + '" />');
 
+                    var rank_list = data.yammer_result;
+                    var str = "<table>";
+                    str += "<tr><th>Rank</th><th>Photo</th><th>Name</th><th>Comment</th><th>Post</th></tr>"
+                    $.each(rank_list, function(i, val) {
+                        //alert("index: " + i);
+                        //alert("content: " + val[1]);
+                        str += "<tr>" + "<td>" + (i+1) + "</td>" +
+                        "<td>" + "<a href =" + val[5] + ">" + "<img src = " + val[4] + "/></a>"  + "</td>" +
+                        "<td>" + val[1] + "</td>" + "<td>"+val[2] +
+                         "</td>" + "<td>"+val[3]+"</td>"+"</tr>";
 
+                    });
+                    str += "</table>";
 
-                    $('#success_alert').text("You chose group: " + data.group_id + " with "+data.letter_num).show()
+                    $('#id_rank_list').append(str);
+
+                    // rank list
+
+                    $('#success_alert').text("You chose group: " + data.group_id + " with "+data.group_name).show()
                     $('#error_alert').hide();
                     alert("You chose group: " + data.group_id +"\n" + "result is: " + data.yammer_result)
                 }
@@ -90,12 +105,6 @@
             });
 
             event.preventDefault();
-        });
-    });
-
-    $(function() {
-        $("p").click(function() {
-            $('#id_data_img').append("<b>加了后面一段文本</b>");
         });
     });
 

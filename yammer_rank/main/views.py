@@ -384,7 +384,7 @@ def process_ajax():
     if rank_for_post:
         rank_category = "Post"
 
-    response = {'group_id':group_id, 'yammer_result':yammer_result, 'img_data':img_data}
+    response = {'group_id':group_id, 'group_name':group_name, 'yammer_result':yammer_result, 'img_data':img_data}
     print("DEBUG process_jax finished!!!!!!!!!!!")
 
     return jsonify(response), 200
