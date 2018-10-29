@@ -68,12 +68,14 @@ def index():
         print("DEBUG set user name local test")
         return render_template('main/yammer_rank.html', user_name="local test")
     else:
-        return "No token in session"
+        pass
+        #return "No token in session"
 
     #response from oauth_login callback
     #Yammer api doesn't allow /callback
     #see https://developer.yammer.com/docs/authentication-1
     resp = yammer_rank_oauth.authorized_response()
+    print("DEBUG resp: {}".format(resp))
 
     if resp is not None:
         print("DEBUG this is main.index authorized function!!!!!!!!!!!!!!")
