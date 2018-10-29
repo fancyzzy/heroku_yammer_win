@@ -70,7 +70,8 @@ def text_plotter(text, x_data, y_data, text_positions, txt_width,txt_height, fin
 
 
 
-def draw_figure(data_list, threshold, date_end, date_start, final_comment_number, show_top=10, group_name=None):
+def draw_figure(data_list, threshold, date_end, date_start, final_comment_number, show_top=10, group_name=None, \
+                total_comments=0, total_posts=0):
     '''
 
     :param data_list: [[id,name,updates,posts,photo],...]
@@ -111,9 +112,10 @@ def draw_figure(data_list, threshold, date_end, date_start, final_comment_number
 
     s = ''
     if group_name != None:
-        s = "{} \nRankings (from {} to {})".format(group_name, date_end, date_start)
+        s = "{} \n from {} to {}".format(group_name, date_end, date_start)
     else:
-        s = "Rankings (from {} to {})".format(date_end, date_start)
+        s = "from {} to {}".format(date_end, date_start)
+    s = s + '\n' + 'Total comments: {}, posts: {}'.format(total_comments, total_posts)
     title_str = s
     ax1.set_title(title_str, fontsize=18)
     plt.ylabel("Posts", fontsize=12)

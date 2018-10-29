@@ -238,9 +238,9 @@ class My_Yammer():
         :param group_id:
         :param letter_num: letter number of a message content
         :param least_comment_num: number of messages sent
-        :param end_date:   liek '2018/08/07'
-        :param start_date: '2018/02/01'
-        :return: ranked_list: [[id, name, comment, post],...]
+        :param end_date:   like '2018/08/07' latest date
+        :param start_date: '2018/02/01' back to oldest date
+        :return: ranked_list: [[id, name, comment, post],...], total comments, total posts
         '''
         print("DEBUG Start show group rank with at least letter_num: {}, least_comment_num: {}, from date: {} to {}".\
               format(letter_num, least_comment_num, end_date, start_date))
@@ -290,7 +290,11 @@ class My_Yammer():
                     n += 1
 
         #[[id, comments, post], ...]
-        result_list = [[x,d_users[x][0],d_users[x][1]] for x in d_users.keys() if d_users[x][0] >= least_comment_num]
+        if is_sorted_for_post:
+            result_list = [[x,d_users[x][0],d_users[x][1]] for x in d_users.keys()]
+        else:
+            result_list = [[x,d_users[x][0],d_users[x][1]] for x in d_users.keys() if d_users[x][0] >= least_comment_num]
+        print("DEBUG raw result_list: {}".format(result_list))
 
         if is_sorted_for_post:
             #for post
@@ -355,13 +359,14 @@ class My_Yammer():
         group_name = self.get_group_name(group_id)
         print("DEBUG In the group '{}',".format(group_name))
         print("DEBUG Totally {} comments and  {} posts from date {} back to {}".format(n, n_post, end_date, start_date))
-        print("DEBUG Where {} people sent at least {} comments".format(len(result_list), least_comment_num))
+        if not is_sorted_for_post:
+            print("DEBUG Where {} people sent at least {} comments".format(len(result_list), least_comment_num))
         if unknown_num > 0:
             print("DEBUG %d unknown user."%(unknown_num))
 
         #rank_field = ["Id", "Full_Name", "Updats", "Posts", "Photo"]
 
-        return ranked_list
+        return ranked_list,n, n_post
     #############get_group_rank()##################################################
 
 
@@ -452,7 +457,7 @@ if __name__ == '__main__':
     ranked_list = my_yammer.get_group_rank(group_id, letter_num=0, least_comment_num=1, end_date=str_now, \
                                            start_date=None, is_sorted_for_post=True)
 
-    #my_yammer.export_users_details_to_excel(group_id)
+    my_yammer.export_users_details_to_excel(group_id)
     if ranked_list != None:
         for item in ranked_list:
             print(item)

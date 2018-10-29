@@ -8,6 +8,7 @@ from flask_oauthlib.client import OAuth
 config_name = os.getenv('FLASK_CONFIG')
 print("DEBUG manage.py, config_name retrived from OS envrionment: {}".format(config_name))
 app = create_app(config_name or 'default')
+print("DEBUG app.name: {}".format(app.name))
 
 
 manager = Manager(app)

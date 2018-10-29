@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 #ACCESS_TOKEN = '592-sGkKVOjrGBIUMF6jfiphhQ'
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")

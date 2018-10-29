@@ -1,4 +1,8 @@
 import os
+
+from dotenv import load_dotenv
+load_dotenv()
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 print("DEBUG config.py basedir: {}".format(basedir))
 
@@ -11,8 +15,14 @@ class Config:
     CLIENT_ID = os.environ.get("CLIENT_ID")
     CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
     REDIRECT_URL = os.environ.get("REDIRECT_URL")
+    print("DEBUG CLIENT_ID: {}".format(CLIENT_ID))
+    print("DEBUG REDIRECT_URL: {}".format(REDIRECT_URL))
     AUTH_URL = "https://www.yammer.com/oauth2/authorize?client_id="\
                + CLIENT_ID + "&response_type=code&redirect_uri=" + REDIRECT_URL
+
+
+    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
     @staticmethod
     def init_app(app):

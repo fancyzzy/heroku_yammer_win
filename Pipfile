@@ -16,6 +16,7 @@ gunicorn = "*"
 flask-oauthlib = "*"
 celery = "==3.1.25"
 redis = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

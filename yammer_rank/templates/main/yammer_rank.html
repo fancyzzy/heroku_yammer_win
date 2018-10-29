@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title> Yammer Rank Home Page</title>
-    <script type="text/javascript"></script>
+    <!--script type="text/javascript"></script-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <link href="/static/favicon.ico" rel="icon" type="image/x-icon" />
 </head>
 
 <body>
 <h1> Hello {{ user_name }}, welcome to Yammer Rank!</h1>
 <h4>Select group, end date and start date to get the rank result</h4>
-<form method="post" action="/rank_result">
+
+<!-- form method="post" action="/rank_result"-->
+<form id="my_form" method="POST">
     <br>
-    group id
-    <input type="text" id="id_sel_group" name="sel_group" placeholder="Enter group id" oninput="value=value.replace(/[^\d]/g,'')"/>
-    <!--<select name="sel_group" id="id_sel_group">
-        {% for group in groups %}
-            <option value = {{ group[1] }}> {{ group[0] }}</option>
-        {% endfor %}
-    </select>-->
+    group id*
+    <input type="text" id="id_sel_group" name="sel_group" placeholder="Enter group id" required="required"
+          value="15273590" oninput="value=value.replace(/[^\d]/g,'')"/>
     <br>
     from date
     <input type="date" id="id_end_date" name="end_date" placeholder="Enter end date"/>
@@ -26,45 +25,89 @@
     <input type="date" name="start_date" placeholder="Beginning"/>
     <br>
     Comment character number >=
-    <input type="text" id="id_letter_num" name="letter_num" oninput="value=value.replace(/[^\d]/g,'')"/>
+    <input type="text" id="id_letter_num" name="letter_num" value="1" oninput="value=value.replace(/[^\d]/g,'')"/>
     <br>
     Comment number >=
-    <input type="text" id="id_comment_num" name="least_comment_num" oninput="value=value.replace(/[^\d]/g,'')"/>
+    <input type="text" id="id_comment_num" name="least_comment_num" value="1" oninput="value=value.replace(/[^\d]/g,'')"/>
     <br>
     final comment number =
-    <input type="text" id="id_final_comment_num" name="final_comment_num" oninput="value=value.replace(/[^\d]/g,'')"/>
+    <input type="text" id="id_final_comment_num" name="final_comment_num" value="100" oninput="value=value.replace(/[^\d]/g,'')"/>
     <br>
     display top x labels=
-    <input type="text" id="id_show_top" name="show_top" oninput="value=value.replace(/[^-,\d]/g,'')"/>
+    <input type="text" id="id_show_top" name="show_top" value="10" oninput="value=value.replace(/[^-,\d]/g,'')"/>
     <br>
     Rank based on post number=
     <select id="id_rank_for_post" name="rank_for_post">
         <option value = 0> False</option>
         <option value = 1> True</option>
     </select>
+
     <br><br>
-    <input type="submit" value="Get Yammer Rank" name="get_rank"/>
+    <input type="submit" id="id_get_rank" value="Get Yammer Rank" name="get_rank" />
+
 </form>
 <br><br>
-<!--
-<form method="post" action="/login">
-    <input type="submit" value="Download newer message" name="start_download"/>
-</form>
--->
+
+<div id="success_alert"></div>
+<div id="error_alert"></div>
+
+<hr>
+<!--img id="id_data_img" src="data:image/png;base64,{{ img_data }} "-->
+<div id="id_img_data">Rank Image</div>
+<br/>
+<div id="id_rank_list" name="rank_list">Rank List</div>
+<br/>
 
 <script>
-    window.onload = function(){
-        var t= new Date();
-        var year = t.getFullYear();
-        var month = t.getMonth() + 1;
-        var day = t.getDate();
-        var p_end_date = document.getElementById("id_end_date");
-        p_end_date.value=year+"/"+month+"/"+day;
-        document.getElementById("id_letter_num").value=1
-        document.getElementById("id_comment_num").value=1
-        document.getElementById("id_final_comment_num").value=100
-        document.getElementById("id_show_top").value=10
-    };
+    $(document).ready(function() {
+
+        $('form').on('submit', function(event) {
+            $('#id_get_rank').attr({"disabled":"true"});
+
+            $.ajax({
+                data: $('#my_form').serialize(),
+                type: 'POST',
+                url: '/process_ajax'
+            })
+            .done(function(data) {
+                $('#id_get_rank').removeAttr("disabled");
+                if (data.error) {
+                    $('#error_alert').text(data.error).show();
+                    $('#success_alert').hide();
+                }
+                else {
+                    // img
+                    $('#id_img_data').html('<img src="data:image/png;base64,' + data.img_data + '" />');
+
+                    var rank_list = data.yammer_result;
+                    var str = "<table>";
+                    str += "<tr><th>Rank</th><th>Photo</th><th>Name</th><th>Comment</th><th>Post</th></tr>"
+                    $.each(rank_list, function(i, val) {
+                        //alert("index: " + i);
+                        //alert("content: " + val[1]);
+                        str += "<tr>" + "<td>" + (i+1) + "</td>" +
+                        "<td>" + "<a href =" + val[5] + ">" + "<img src = " + val[4] + "/></a>"  + "</td>" +
+                        "<td>" + val[1] + "</td>" + "<td>"+val[2] +
+                         "</td>" + "<td>"+val[3]+"</td>"+"</tr>";
+
+                    });
+                    str += "</table>";
+
+                    $('#id_rank_list').html(str);
+
+                    // rank list
+
+                    $('#success_alert').text("You chose group: " + data.group_id + " with "+data.group_name).show()
+                    $('#error_alert').hide();
+                    alert("You chose group: " + data.group_id +"\n" + "result is: " + data.yammer_result)
+                }
+
+            });
+
+            event.preventDefault();
+        });
+    });
+
 </script>
 
 </body>
