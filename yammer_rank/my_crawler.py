@@ -17,7 +17,7 @@ import time
 
 
 
-BASE_API = 'http://www.yammer.com/api/v1'
+BASE_API = 'https://www.yammer.com/api/v1'
 #YAMMER_API_MESSAGE = 'https://www.yammer.com/api/v1/messages/in_group/15273590.json'
 YAMMER_GROUP_MESSAGES = 'https://www.yammer.com/api/v1/messages/in_group/'
 #YAMMER_API_USER = 'https://www.yammer.com/api/v1/users/in_group/15273590.json'
@@ -340,6 +340,10 @@ class My_Crawler():
     def download_user_details(self, user_dict, interval=1):
         '''
         download one user detailed information from the url in the user dict
+        notice that the api_str should only be the /user/xxx format
+        because the yampy will automatically add the https and .json
+        to combine the full https url. If you send the api_str a https url
+        then the result is yampy can't find the correct address.
 
         :param user_dict: Contatins all user info in key 'url' value
         see: https://www.yammer.com/api/v1/users/1640338967.json
@@ -357,6 +361,8 @@ class My_Crawler():
 
         #Call yampy API
         api_str = user_url.replace(BASE_API, '')
+        api_str = api_str.rstrip(".json")
+        print("DEBUG BASE_API: {}.".format(BASE_API))
         print("DEBUG api_str: {}".format(api_str))
         json_dict = self.yampy.client.get(api_str)
 

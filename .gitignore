@@ -12,3 +12,4 @@ yammer_crawler/data
 /.env
 .DS_Store
 dump.rdb
+/data

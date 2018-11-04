@@ -134,6 +134,7 @@ class My_Yammer():
     def pull_all_users_details(self, group_id, interval=1):
         '''
         download all the users detailed info and save each one into a json file
+        into a group based folder
 
         :param group_id:
         :param interval:
@@ -382,6 +383,12 @@ class My_Yammer():
 
         dest_folder = my_database.DATA_PATH
 
+        if not dict_list:
+            print("DEBUG No user details found for group {}".format(group_id))
+            return False
+            # download all the users detailed json files into a group named folder
+            #self.pull_all_users_details(group_id)
+
         total_num = len(dict_list)
 
         if total_num == 0:
@@ -454,12 +461,18 @@ if __name__ == '__main__':
     #my_yammer.pull_all_users_and_details(group_id, interval=1)
     #my_yammer.pull_newer_messages(group_id, interval=1)
     str_now = datetime.now().strftime("%Y/%m/%d")
+    '''
+    # test the get rank function
     ranked_list = my_yammer.get_group_rank(group_id, letter_num=0, least_comment_num=1, end_date=str_now, \
                                            start_date=None, is_sorted_for_post=True)
-
-    my_yammer.export_users_details_to_excel(group_id)
     if ranked_list != None:
         for item in ranked_list:
             print(item)
+    '''
+
+    # test the excel generation function
+    group_id = 15273590
+    my_yammer.pull_all_users_and_details(group_id, interval=5)
+    my_yammer.export_users_details_to_excel(group_id)
 
     print("done")

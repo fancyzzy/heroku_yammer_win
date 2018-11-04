@@ -134,7 +134,7 @@ class My_Database():
 
     def save_group_user_details(self, dict_data, group_id):
         '''
-        Save each user detailed json file
+        Save each user detailed json file into a group id folder
 
         :param dict_data:
         :param group_id:
@@ -231,7 +231,8 @@ class My_Database():
 
     def  get_users_details(self, group_id):
         '''
-        Find a user's detailed info from search in the specific gr
+        Find a user's detailed info(each json file for a user) from search in the specific
+        folder named by the group id like group_123
 
         :param user_id:
         :param group_id:
