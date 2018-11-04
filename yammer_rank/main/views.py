@@ -10,7 +10,7 @@ from flask import request
 from flask import render_template
 from flask import session
 from flask import redirect, url_for
-from flask import jsonify
+from flask import jsonify, make_response
 
 from datetime import datetime
 import time
@@ -40,6 +40,21 @@ def long_time_task(ya, group_id, letter_num, least_comment_num, end_date, start_
     print("DEBUG celery function finished!!!!")
     return result
 '''
+
+# for ssl challenge
+@main.route('/_dnsauth.yammerrank')
+def dnsauth():
+    base_dir = os.path.dirname(__file__)
+    base_dir = os.path.dirname(base_dir)
+    base_dir = os.path.dirname(base_dir)
+    print("DEBUG base_dir: {}".format(base_dir))
+    resp = make_response(open(os.path.join(base_dir, "_dnsauth.yammerrank")).read())
+    #resp.headers["Content-type"]="application/json;charset=UTF-8"
+    resp.headers["Content-type"]="text/plain;charset=UTF-8"
+    return resp
+
+    #return "_dnsauth"
+    #return _dnsauth.yammerrank
 
 
 @main.route('/')
